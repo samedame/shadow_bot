@@ -1,0 +1,1 @@
+id,strategy,sleeve,version,pair_id,entry_date,exit_date,exit_reason,expiry,dte_in,dte_out,spot_in,legs,credit_mid,credit_base,credit_nat,entry_fees,exit_cf_mid,exit_cf_base,exit_cf_nat,exit_fees,units,max_loss,pnl_mid,pnl_base,pnl_nat,pnl_x3,pnl_f65,med_rel_spread,stale,flags,quote_file_ts_utc,model_credit_base,real_over_model,notes

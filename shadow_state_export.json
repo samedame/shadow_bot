@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "shadow": true,
+  "banner": "SHADOW - NOT A TRADE",
+  "note": "Shadow-only export. Positions hold no money. Not for the live combined-drawdown monitor.",
+  "generated_at": "2026-10-14T02:51:24+00:00",
+  "strategies": {
+    "C9": {
+      "strategy_id": "C9",
+      "name": "CONDOR_1D",
+      "status": "active",
+      "primed": false,
+      "open_positions": [],
+      "closed_history": [],
+      "cumulative_pnl_base": 0.0,
+      "cumulative_pnl_natural": 0.0,
+      "running_peak": 0.0,
+      "drawdown": 0.0,
+      "max_drawdown": 0.0,
+      "trades_since_reset": 0,
+      "shadow": true
+    },
+    "C6": {
+      "strategy_id": "C6",
+      "name": "NONEQ_VRP",
+      "status": "active",
+      "primed": false,
+      "open_positions": [],
+      "closed_history": [],
+      "cumulative_pnl_base": 0.0,
+      "cumulative_pnl_natural": 0.0,
+      "running_peak": 0.0,
+      "drawdown": 0.0,
+      "max_drawdown": 0.0,
+      "trades_since_reset": 0,
+      "shadow": true
+    },
+    "C3": {
+      "strategy_id": "C3",
+      "name": "SPY_HEDGE",
+      "status": "active",
+      "primed": false,
+      "open_positions": [],
+      "closed_history": [],
+      "cumulative_pnl_base": 0.0,
+      "cumulative_pnl_natural": 0.0,
+      "running_peak": 0.0,
+      "drawdown": 0.0,
+      "max_drawdown": 0.0,
+      "trades_since_reset": 0,
+      "shadow": true,
+      "premium_paid_since_reset": 0.0,
+      "premium_budget": null
+    }
+  }
+}

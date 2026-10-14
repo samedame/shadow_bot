@@ -1,0 +1,150 @@
+{
+ "schema": 1,
+ "strategies": {
+  "C9": {
+   "status": "active",
+   "primed": false,
+   "closed_n": 0,
+   "unpriced_n": 0,
+   "cum_pnl_mid": 0.0,
+   "cum_pnl_base": 0.0,
+   "cum_pnl_nat": 0.0,
+   "peak": 0.0,
+   "drawdown": 0.0,
+   "max_drawdown": 0.0,
+   "recent_pnl_base": [],
+   "recent_pnl_nat": [],
+   "open_positions": [],
+   "exit_alerts": {},
+   "entries_done": [],
+   "quality": [],
+   "kill_alerts": {},
+   "started": null
+  },
+  "C6": {
+   "status": "active",
+   "primed": false,
+   "closed_n": 0,
+   "unpriced_n": 0,
+   "cum_pnl_mid": 0.0,
+   "cum_pnl_base": 0.0,
+   "cum_pnl_nat": 0.0,
+   "peak": 0.0,
+   "drawdown": 0.0,
+   "max_drawdown": 0.0,
+   "recent_pnl_base": [],
+   "recent_pnl_nat": [],
+   "open_positions": [],
+   "exit_alerts": {},
+   "entries_done": [],
+   "quality": [],
+   "kill_alerts": {},
+   "started": "2026-10-13",
+   "sleeves": {
+    "GLD": {
+     "closed_n": 0,
+     "cum_pnl_base": 0.0,
+     "cum_pnl_nat": 0.0
+    },
+    "TLT": {
+     "closed_n": 0,
+     "cum_pnl_base": 0.0,
+     "cum_pnl_nat": 0.0
+    }
+   },
+   "model": {
+    "open": [],
+    "closed_n": 0,
+    "cum_pnl_base": 0.0,
+    "cum_pnl_nat": 0.0,
+    "recent_pnl_base": [],
+    "sleeves": {
+     "GLD": {
+      "closed_n": 0,
+      "cum_pnl_base": 0.0
+     },
+     "TLT": {
+      "closed_n": 0,
+      "cum_pnl_base": 0.0
+     }
+    }
+   },
+   "pairs": []
+  },
+  "C3": {
+   "status": "active",
+   "primed": false,
+   "closed_n": 0,
+   "unpriced_n": 0,
+   "cum_pnl_mid": 0.0,
+   "cum_pnl_base": 0.0,
+   "cum_pnl_nat": 0.0,
+   "peak": 0.0,
+   "drawdown": 0.0,
+   "max_drawdown": 0.0,
+   "recent_pnl_base": [],
+   "recent_pnl_nat": [],
+   "open_positions": [],
+   "exit_alerts": {},
+   "entries_done": [],
+   "quality": [],
+   "kill_alerts": {},
+   "started": null,
+   "premium_paid_since_reset": 0.0,
+   "premium_reset_date": null,
+   "gate_log": [],
+   "candidate": null,
+   "spy_peak": 779.09,
+   "spy_peak_date": "2026-10-13",
+   "episode": null,
+   "hedge_ledger": []
+  }
+ },
+ "last_run": {
+  "trigger": "manual",
+  "at_et": "2026-10-13T22:48:43-04:00",
+  "session": "2026-10-13",
+  "phase": "close",
+  "guard": "too_late",
+  "late_min": 388.7,
+  "data_ok": false,
+  "strategies": [
+   "C3",
+   "C6",
+   "C9"
+  ]
+ },
+ "outbox": [],
+ "sent": {
+  "hello": "2026-10-13T22:48:43-04:00",
+  "notice:data:2026-10-13": "2026-10-13T22:48:43-04:00"
+ },
+ "skips": {
+  "2026-W42": {
+   "C9": {
+    "run_late": 1
+   }
+  }
+ },
+ "total_skips": {
+  "C9": {
+   "run_late": 1
+  },
+  "C6": {},
+  "C3": {}
+ },
+ "skip_keys": {
+  "2026-10-13|C9|run_late": true
+ },
+ "runs": {
+  "2026-W42": 1
+ },
+ "last_session": {
+  "C9": "2026-10-13",
+  "C6": "2026-10-13",
+  "C3": "2026-10-13"
+ },
+ "notes": {
+  "prov_vs_pub": []
+ }
+}
