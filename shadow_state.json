@@ -14,12 +14,123 @@
    "max_drawdown": 0.0,
    "recent_pnl_base": [],
    "recent_pnl_nat": [],
-   "open_positions": [],
+   "open_positions": [
+    {
+     "id": "C9-2026-10-14",
+     "strategy": "C9",
+     "sleeve": "SPY",
+     "version": "real",
+     "entry_date": "2026-10-14",
+     "quote_time": "2026-10-14T16:00:00-04:00",
+     "quote_file_ts_utc": "2026-10-14T20:20:35+00:00",
+     "opened_at": "2026-10-14T16:21:03-04:00",
+     "expiry": "2026-10-15",
+     "dte_in": 1,
+     "spot_in": 769.6,
+     "legs": [
+      {
+       "label": "SELL 1 775C 2026-10-15",
+       "cp": 1,
+       "strike": 775.0,
+       "expiry": "2026-10-15",
+       "qty": -1,
+       "bid": 0.46,
+       "ask": 0.47,
+       "mid": 0.465,
+       "iv": 0.14,
+       "delta": 0.1576,
+       "delta_src": "feed"
+      },
+      {
+       "label": "BUY 1 783C 2026-10-15",
+       "cp": 1,
+       "strike": 783.0,
+       "expiry": "2026-10-15",
+       "qty": 1,
+       "bid": 0.03,
+       "ask": 0.04,
+       "mid": 0.035,
+       "iv": 0.1557,
+       "delta": 0.0155,
+       "delta_src": "feed"
+      },
+      {
+       "label": "SELL 1 763P 2026-10-15",
+       "cp": -1,
+       "strike": 763.0,
+       "expiry": "2026-10-15",
+       "qty": -1,
+       "bid": 0.62,
+       "ask": 0.63,
+       "mid": 0.625,
+       "iv": 0.1646,
+       "delta": -0.1753,
+       "delta_src": "feed"
+      },
+      {
+       "label": "BUY 1 755P 2026-10-15",
+       "cp": -1,
+       "strike": 755.0,
+       "expiry": "2026-10-15",
+       "qty": 1,
+       "bid": 0.12,
+       "ask": 0.13,
+       "mid": 0.125,
+       "iv": 0.2006,
+       "delta": -0.0399,
+       "delta_src": "feed"
+      }
+     ],
+     "entry_cf": {
+      "mid": 93.0,
+      "base": 92.0,
+      "nat": 91.0,
+      "x3": 90.0
+     },
+     "entry_units": 4,
+     "max_loss": 708.2,
+     "med_rel_spread": 0.050752688172042995,
+     "flags": {
+      "stale": false
+     },
+     "exit_attempts": 0,
+     "gate": {
+      "prev": "2026-10-13",
+      "rv20": 0.006032648481818858,
+      "median": 0.006613389752004388,
+      "window": 20
+     },
+     "gate_alt": true,
+     "alt": {
+      "call": 775.0,
+      "put": 763.0,
+      "differs": false,
+      "feed_call": 775.0,
+      "feed_put": 763.0
+     },
+     "strikes": {
+      "k_call": 775.0,
+      "k_put": 763.0,
+      "k_call_wing": 783.0,
+      "k_put_wing": 755.0
+     },
+     "why": "RV20 below its 20-day median; next-trading-day expiry"
+    }
+   ],
    "exit_alerts": {},
-   "entries_done": [],
-   "quality": [],
+   "entries_done": [
+    "C9-2026-10-14"
+   ],
+   "quality": [
+    {
+     "date": "2026-10-14",
+     "flag": false,
+     "med_rel_spread": 0.050752688172042995,
+     "why": "ticket"
+    }
+   ],
    "kill_alerts": {},
-   "started": null
+   "started": "2026-10-14"
   },
   "C6": {
    "status": "active",
@@ -101,13 +212,13 @@
   }
  },
  "last_run": {
-  "trigger": "manual",
-  "at_et": "2026-10-13T22:48:43-04:00",
-  "session": "2026-10-13",
+  "trigger": "cf-scheduler",
+  "at_et": "2026-10-14T16:21:03-04:00",
+  "session": "2026-10-14",
   "phase": "close",
-  "guard": "too_late",
-  "late_min": 388.7,
-  "data_ok": false,
+  "guard": "on_time",
+  "late_min": 1.0,
+  "data_ok": true,
   "strategies": [
    "C3",
    "C6",
@@ -117,7 +228,8 @@
  "outbox": [],
  "sent": {
   "hello": "2026-10-13T22:48:43-04:00",
-  "notice:data:2026-10-13": "2026-10-13T22:48:43-04:00"
+  "notice:data:2026-10-13": "2026-10-13T22:48:43-04:00",
+  "entry:C9-2026-10-14": "2026-10-14T16:21:03-04:00"
  },
  "skips": {
   "2026-W42": {
@@ -137,14 +249,39 @@
   "2026-10-13|C9|run_late": true
  },
  "runs": {
-  "2026-W42": 1
+  "2026-W42": 2
  },
  "last_session": {
-  "C9": "2026-10-13",
-  "C6": "2026-10-13",
-  "C3": "2026-10-13"
+  "C9": "2026-10-14",
+  "C6": "2026-10-14",
+  "C3": "2026-10-14"
  },
  "notes": {
-  "prov_vs_pub": []
+  "prov_vs_pub": [
+   {
+    "name": "GVZ",
+    "date": "2026-10-13",
+    "prov": 22.09,
+    "pub": 22.09
+   },
+   {
+    "name": "VXTLT",
+    "date": "2026-10-13",
+    "prov": 14.54,
+    "pub": 14.54
+   },
+   {
+    "name": "VIX",
+    "date": "2026-10-13",
+    "prov": 15.27,
+    "pub": 15.27
+   },
+   {
+    "name": "VIX3M",
+    "date": "2026-10-13",
+    "prov": 17.96,
+    "pub": 17.96
+   }
+  ]
  }
 }

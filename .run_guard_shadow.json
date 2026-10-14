@@ -1,0 +1,8 @@
+{
+ "shadow-daily:2026-10-14": {
+  "done_at": "2026-10-14T16:23:48-04:00",
+  "late_min": 1.0,
+  "status": "on_time",
+  "trigger": "cf-scheduler"
+ }
+}

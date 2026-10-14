@@ -3,14 +3,30 @@
   "shadow": true,
   "banner": "SHADOW - NOT A TRADE",
   "note": "Shadow-only export. Positions hold no money. Not for the live combined-drawdown monitor.",
-  "generated_at": "2026-10-14T02:51:24+00:00",
+  "generated_at": "2026-10-14T20:23:48+00:00",
   "strategies": {
     "C9": {
       "strategy_id": "C9",
       "name": "CONDOR_1D",
       "status": "active",
       "primed": false,
-      "open_positions": [],
+      "open_positions": [
+        {
+          "id": "C9-2026-10-14",
+          "sleeve": "SPY",
+          "version": "real",
+          "entry_date": "2026-10-14",
+          "expiry": "2026-10-15",
+          "legs": [
+            "SELL 1 775C 2026-10-15",
+            "BUY 1 783C 2026-10-15",
+            "SELL 1 763P 2026-10-15",
+            "BUY 1 755P 2026-10-15"
+          ],
+          "max_loss": 708.2,
+          "shadow": true
+        }
+      ],
       "closed_history": [],
       "cumulative_pnl_base": 0.0,
       "cumulative_pnl_natural": 0.0,
