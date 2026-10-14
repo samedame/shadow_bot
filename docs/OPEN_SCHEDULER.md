@@ -12,13 +12,13 @@ on the control bot, 272 to 296 minutes late on two others). The existing bots th
 | Trigger | When | What `run_guard.py` does with it |
 |---|---|---|
 | Worker, `trigger=cf-scheduler`, `scheduled_for_et=<16:20 ET>` | 16:20 ET, any season | Runs it. Writes the day's marker `.run_guard_shadow.json` after a clean exit. |
-| Native cron `20 20,21 * * 1-5` (UTC) | 20:20 and 21:20 UTC, every weekday | In summer 20:20 UTC is 16:20 ET (on time) and 21:20 UTC is 17:20 ET. In winter 20:20 UTC is 15:20 ET (more than a minute before the target: `too_early`, skipped silently) and 21:20 UTC is 16:20 ET. When the Worker run already happened the later copy is a silent duplicate. If the Worker run did not happen, a late native copy runs flagged: it settles and exits but opens nothing new (`run_late`) once it is past 16:30 ET. |
+| Native cron `20 20,21 * * 1-5` (UTC, GitHub numbers Sunday 0) | 20:20 and 21:20 UTC, every weekday | In summer 20:20 UTC is 16:20 ET (on time) and 21:20 UTC is 17:20 ET. In winter 20:20 UTC is 15:20 ET (more than a minute before the target: `too_early`, skipped silently) and 21:20 UTC is 16:20 ET. When the Worker run already happened the later copy is a silent duplicate. If the Worker run did not happen, a late native copy runs flagged: it settles and exits but opens nothing new (`run_late`) once it is past 16:30 ET. |
 | "Run workflow" button | any time | A manual run: ignores and never writes the marker. Tick `dry_run` to print what would be posted and write nothing. |
 
 ## 1. The job entry
 
 In the Worker's job list add one entry shaped like the existing ones (`condor-stage`, `ibs-dip-calls`). The project notes give that shape as
-`{ id: "condor-stage", target: "09:15", grace_min: 10, workflow: "stage.yml", ref: "main" }` and, for `ibs-dip-calls`, `target` 15:45 ET,
+`{ id: "condor-stage", repo: "samedame/daytrading_bot", workflow: "stage.yml", ref: "main", at_et: "09:15", grace_min: 10, watchdog_min: 4 }` and, for `ibs-dip-calls`, `at_et` 15:45 ET,
 `grace_min: 13`, workflow `daily-signal.yml`, ref `master`; they also mention a `repo` for each job, a `watchdog_min`, and optional
 `weekdays` and `skip_holidays`.
 
@@ -28,7 +28,7 @@ In the Worker's job list add one entry shaped like the existing ones (`condor-st
   repo: "samedame/shadow_bot",   // keep this line only if your other entries carry a repo field
   workflow: "shadow.yml",
   ref: "main",
-  target: "16:20",         // ET, like "15:45" on ibs-dip-calls
+  at_et: "16:20",          // ET, like "15:45" on ibs-dip-calls
   grace_min: 10,           // usable until 16:30 ET, as ibs-dip-calls is 15:45 + 13 = 15:58; shadow.yml's guard uses the same 16:30
   watchdog_min: 4,
   // weekdays and skip_holidays: leave unset, like the other trading-day jobs. The Worker skips weekends and exchange holidays itself.
@@ -36,10 +36,7 @@ In the Worker's job list add one entry shaped like the existing ones (`condor-st
 }
 ```
 
-**What could not be checked from here:** the Worker's source code itself. The field names above come from the two project notes (the
-2026-09-25 incident note and the 2026-10-08 condor wiring note, which says the same: "the Worker code was not seen"). Open an existing
-entry and mirror its field names exactly; if the Worker has a check script (`npm run check` was mentioned in the uploaded README), run it
-before deploying.
+**Checked against the deployed Worker (read through the Cloudflare API on 2026-10-13):** jobs live in the bundled `jobs.json` (`id`, `repo`, `workflow`, `ref`, `at_et`, `grace_min`, `watchdog_min`, optional `enabled`, `weekdays`, `skip_holidays`, `fallback_message`); the Worker dispatches with inputs `scheduled_for_et` and `trigger: "cf-scheduler"`. Its Cron Triggers were `* 0-1 * * 2-6` and `* 11-20 * * 2-6`. If the Worker is built from a repository of yours, make the same edit there, or the next deploy from it will drop the entry.
 
 The Worker dispatches with the same two inputs as the other bots' workflows: `trigger` (value `cf-scheduler`) and `scheduled_for_et`.
 `shadow.yml` declares both. Its secret is **`SHADOW_DISCORD_WEBHOOK_URL`** in the `shadow_bot` repository, not the Worker's.
@@ -50,15 +47,15 @@ first thing to look at.
 
 ## 2. The Cron Trigger (needed before November 2)
 
-The Worker wakes on Cron Triggers written in UTC. The project docs list them as `* 11-20 * * 1-5` (plus `* 0-1 * * 1-5` for the evening
+The Worker wakes on Cron Triggers written in UTC. The project docs list them as `* 11-20 * * 2-6` (plus `* 0-1 * * 2-6` for the evening
 jobs). `* 11-20` covers up to 20:59 UTC, which is 16:59 ET in summer but only 15:59 ET in winter.
 
-| Season | 16:20 ET is | Covered by `* 11-20 * * 1-5`? |
+| Season | 16:20 ET is | Covered by `* 11-20 * * 2-6`? |
 |---|---|---|
 | Summer (EDT, UTC-4), until Saturday, October 31, 2026 | 20:20 UTC | yes |
 | Winter (EST, UTC-5), first session Monday, November 2, 2026, until Saturday, March 13, 2027 | 21:20 UTC | **no** |
 
-Change the trigger to **`* 11-21 * * 1-5`** before November 2 (and leave it; it is harmless in summer, the Worker only fires jobs whose ET time
+Change the trigger to **`* 11-21 * * 2-6`** before November 2 (and leave it; it is harmless in summer, the Worker only fires jobs whose ET time
 has come). This replaces the existing trigger, so the number of Cron Triggers on the Worker does not change. The existing 15:45 ET and 09:15 ET
 jobs are unaffected. If you would rather not touch the trigger, the alternative is to let the native cron be the winter trigger, which is
 the unreliable one: on every day its copy starts after 16:30 ET the bots settle and exit but open nothing new.

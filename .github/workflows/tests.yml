@@ -1,0 +1,27 @@
+name: Tests
+
+# The bot is standard library only; numpy / scipy are installed here for the oracle tests alone (requirements-test.txt).
+# The shadow job's own state commits (made with GITHUB_TOKEN) do not trigger this workflow.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Oracle libraries (tests only; the bot has no dependencies)
+        run: python -m pip install -r requirements-test.txt
+      - name: Unit tests
+        run: python -m unittest discover -s tests -t . -v

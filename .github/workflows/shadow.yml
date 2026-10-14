@@ -1,0 +1,89 @@
+name: Shadow bots - daily job
+
+# SHADOW - NOT A TRADE. One daily job runs the three paper-only bots (C9 CONDOR_1D, C6 NONEQ_VRP, C3 SPY_HEDGE) at 16:20 ET.
+# Nothing here places, changes or cancels an order; every Discord message starts with "SHADOW - NOT A TRADE" and goes to its
+# own webhook (secret SHADOW_DISCORD_WEBHOOK_URL), never the live bots' channel.
+#
+# Triggers
+#   * Cloudflare open-scheduler Worker: workflow_dispatch with trigger=cf-scheduler and scheduled_for_et (the precise one;
+#     see docs/OPEN_SCHEDULER.md for the job entry).
+#   * Native cron below: a DST-safe backup. 20:20 UTC is 16:20 ET in summer, 21:20 UTC is 16:20 ET in winter. GitHub's native
+#     schedule ran hours late on this account (project doc bot-schedule-incident-2026-09-25), so run_guard.py silences the
+#     wrong-season copy and any run that duplicates one that already happened.
+#   * Manual: "Run workflow". Tick dry_run to fetch live data and print what would be posted, with nothing written, posted
+#     or committed. Run it after 16:05 ET on a trading day for a meaningful result (earlier is "intraday": diagnostics only).
+on:
+  schedule:
+    - cron: "20 20,21 * * 1-5"
+  workflow_dispatch:
+    inputs:
+      scheduled_for_et:
+        description: "Intended fire time, set by the Worker (ISO-8601 or HH:MM, New York time). Leave empty for a manual run."
+        required: false
+        default: ""
+      trigger:
+        description: "What started this run (the Worker sends cf-scheduler)"
+        required: false
+        default: "manual"
+      dry_run:
+        description: "Print what would be posted; write, post and commit nothing"
+        type: boolean
+        required: false
+        default: false
+
+concurrency:
+  group: shadow-bot
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  shadow:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      SHADOW_DISCORD_WEBHOOK_URL: ${{ secrets.SHADOW_DISCORD_WEBHOOK_URL }}
+      SCHEDULED_FOR_ET: ${{ inputs.scheduled_for_et }}
+      RUN_TRIGGER: ${{ inputs.trigger || github.event_name }}
+      DRY_RUN: ${{ inputs.dry_run && 'true' || 'false' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Shadow job (through the lateness / duplicate guard)
+        run: |
+          if [ "$DRY_RUN" = "true" ]; then
+            python shadow_job.py --dry-run --trigger manual
+          else
+            python run_guard.py --job shadow-daily --target 16:20 --usable-until 16:30 --on-time-min 10 \
+              --on-too-late run_flagged -- python shadow_job.py --trigger "$RUN_TRIGGER"
+          fi
+
+      # Runs even when the job step failed, so whatever it saved (state, log rows, sent-message ledger) is kept.
+      - name: Commit state
+        if: ${{ always() && !inputs.dry_run }}
+        run: |
+          git config user.name "shadow-bot"
+          git config user.email "shadow-bot@users.noreply.github.com"
+          for f in shadow_state.json shadow_log.csv diag_log.jsonl shadow_state_export.json .run_guard_shadow.json data; do
+            if [ -e "$f" ]; then git add -- "$f"; fi
+          done
+          if git diff --cached --quiet; then
+            echo "nothing to commit"
+            exit 0
+          fi
+          git commit -m "state: shadow job $(date -u +%Y-%m-%dT%H:%MZ) (${RUN_TRIGGER})"
+          for attempt in 1 2 3 4 5; do
+            if git push; then
+              exit 0
+            fi
+            echo "push rejected (attempt ${attempt}); rebasing and retrying"
+            git pull --rebase --autostash origin "${GITHUB_REF_NAME}" || git rebase --abort || true
+            sleep $((attempt * 3))
+          done
+          echo "push failed after 5 attempts" >&2
+          exit 1

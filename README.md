@@ -48,7 +48,7 @@ repository, so it was not done here.
 5. **Schedule it.** The workflow carries a native cron (`20 20,21 * * 1-5` UTC, covering both DST seasons), but native schedules ran hours
    late on this account (see `bot-schedule-incident-2026-09-25`). Add the job to the Cloudflare **open-scheduler** Worker and widen its
    Cron Trigger by one hour before **November 2**: step by step in [`docs/OPEN_SCHEDULER.md`](docs/OPEN_SCHEDULER.md). The Worker's own code could not be read
-   from here (the field names come from two project notes: `target: "16:20"`); mirror an existing entry.
+   from here (the field names come from two project notes: `at_et: "16:20"`; Cloudflare numbers weekdays 2-6, so the Cron Trigger is `* 11-21 * * 2-6`); mirror an existing entry.
 6. **First run.** The first real run posts a "shadow bots online" message, then one message per new would-be position. If you start
    in the middle of a week, C6 simply waits for its next weekly entry day; nothing is back-filled from before the bot existed.
 7. **After five trading days**, run `python diag_report.py` (the one-week data check) and read [`docs/OPERATIONS.md`](docs/OPERATIONS.md), section 3.
