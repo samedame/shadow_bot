@@ -1,0 +1,5 @@
+# Test-only: independent numpy / scipy implementations used as oracles by the unit tests (quantiles, medians, standard
+# deviations, Black-Scholes). The bot itself needs nothing beyond the Python standard library (requirements.txt is empty).
+# The tests skip those checks when these are missing, so a plain `python -m unittest discover -s tests -t .` still runs.
+numpy>=1.26
+scipy>=1.11
