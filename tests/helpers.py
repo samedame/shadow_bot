@@ -190,6 +190,15 @@ class FakeSender:
         return [p["content"] for _u, p in self.posts]
 
 
+def full_text(payload: dict) -> str:
+    """What a reader sees of one posted message: the content line, then every embed's description and labelled fields."""
+    out = [payload.get("content") or ""]
+    for e in payload.get("embeds") or []:
+        out.append(e.get("description", ""))
+        out += [f"{f['name']}: {f['value']}" for f in e.get("fields", [])]
+    return "\n".join(out)
+
+
 WEBHOOK = "https://discord.com/api/webhooks/123456789/test-token-not-real"
 
 

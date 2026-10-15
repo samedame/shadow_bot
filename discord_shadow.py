@@ -45,20 +45,48 @@ def embed_size(e: dict) -> int:
     return n
 
 
-def make_message(headline: str, body_lines: list, color: str = "info", fields: Optional[list] = None) -> dict:
-    """-> {"embed": dict | None, "plain": str}. `headline` is everything after the banner on the first line.
+def _field(f: tuple) -> tuple:
+    """(name, value) or (name, value, inline) -> (name, value, inline)."""
+    return (f[0], f[1], bool(f[2])) if len(f) > 2 else (f[0], f[1], False)
+
+
+def make_message(headline: str, body_lines: list, color: str = "info", fields: Optional[list] = None, *,
+                 summary: Optional[str] = None, lead: Optional[str] = None, badge: str = "") -> dict:
+    """-> {"embed": dict | None, "plain": str}.
+
+    Old style (no keyword arguments): `headline` is everything after the banner on the first line, the embed title is the
+    headline and the embed description is `body_lines` in a code block.
+
+    Alert style:
+      summary  the text after the banner on the FIRST line. That line is the post's `content`, i.e. what a phone shows in the
+               notification, so it should say what happened and the key number. Defaults to `headline`.
+      headline the embed title (with `badge`, e.g. a check mark, in front of it).
+      lead     one plain sentence under the title (embed description, above the code block; a line of its own in the twin).
+      body_lines  a short monospaced block (the would-be ticket).
+      fields   [(name, value) | (name, value, inline)] shown as labelled fields; the plain twin gets "Name: value" lines.
 
     The embed is None when it cannot be made to fit Discord's limits (the sender then uses the plain twin). The plain twin is
     always <= 1900 characters and starts with the banner."""
     body = "\n".join(body_lines)
-    plain = f"{BANNER} | {headline}\n{body}" if body else f"{BANNER} | {headline}"
-    plain = trunc(plain, LIM["plain"])
-    desc = "```\n" + body + "\n```" if body else ""
-    embed = {"title": trunc(headline, LIM["title"]), "description": desc, "color": COLORS.get(color, COLORS["info"]),
+    first = headline if summary is None else summary
+    parts = [f"{BANNER} | {first}"]
+    if lead:
+        parts.append(lead)
+    if body:
+        parts.append(body)
+    flds = [_field(f) for f in (fields or []) if f and f[1] not in (None, "")]
+    for name, value, _inline in flds:
+        text = str(value).replace("\n", "\n    ")
+        parts.append(f"{name}: {text}")
+    plain = trunc("\n".join(parts), LIM["plain"])
+    desc_parts = [p for p in (lead, "```\n" + body + "\n```" if body else "") if p]
+    desc = "\n".join(desc_parts)
+    title = f"{badge} {headline}".strip() if badge else headline
+    embed = {"title": trunc(title, LIM["title"]), "description": desc, "color": COLORS.get(color, COLORS["info"]),
              "footer": {"text": BANNER}}
-    if fields:
-        embed["fields"] = [{"name": trunc(n, LIM["field_name"]), "value": trunc(v, LIM["field_value"]), "inline": False}
-                           for n, v in fields[: LIM["fields"]]]
+    if flds:
+        embed["fields"] = [{"name": trunc(n, LIM["field_name"]), "value": trunc(v, LIM["field_value"]), "inline": inl}
+                           for n, v, inl in flds[: LIM["fields"]]]
     if len(desc) > LIM["description"] or embed_size(embed) > LIM["total"]:
         embed = None
     return {"embed": embed, "plain": plain}

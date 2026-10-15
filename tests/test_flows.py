@@ -13,7 +13,7 @@ import re
 import unittest
 from unittest import mock
 
-from tests.helpers import Base, D, FakeSender, WEBHOOK, et
+from tests.helpers import Base, D, FakeSender, WEBHOOK, et, full_text
 from tests.world import World
 
 import config as cfg
@@ -363,9 +363,9 @@ class DataTrouble(Flow):
         times = self.spy_fetches()
         self.assertEqual([(b - a).total_seconds() for a, b in zip(times, times[1:])], [45.0] * 4)
         self.assertEqual(len(r.state["strategies"]["C9"]["open_positions"]), 1)
-        entry = [t for t in r.texts if "C9 CONDOR_1D" in t][0]
-        self.assertIn("16:23 ET", entry)                                                # stamped with the time the data was read
-        self.assertIn("stale: no", entry)
+        entry = full_text(next(p for _u, p in self.w.sender.posts if "C9 CONDOR_1D" in p["content"]))
+        self.assertIn("logged 16:23 ET", entry)                                         # stamped with the time the data was read
+        self.assertNotIn("STALE", entry)
         self.assertEqual(r.diag["feed"]["SPY"]["stale"], None)
 
     def test_it_stops_waiting_at_nine_minutes_and_skips_the_night_as_stale(self):
@@ -1188,7 +1188,7 @@ class Outages(Flow):
         self.assertEqual(r2.state["outbox"], [])
         at = lambda needle: next(i for i, t in enumerate(r2.texts) if needle in t)        # noqa: E731
         self.assertEqual(at("shadow bots online"), 0)                                     # the oldest message goes out first
-        self.assertLess(at(f"C9 CONDOR_1D | {self.d0} 16:20 ET"), at("C9 CONDOR_1D | settled"))    # then the entry, then its settlement
+        self.assertLess(at("C9 CONDOR_1D | NEW paper position"), at("C9 CONDOR_1D | settled"))    # then the entry, then its settlement
         self.assertEqual(sum("shadow bots online" in t for t in self.w.sender.texts[1:]), 1)       # delivered once (texts[0] was the failed try)
         self.assertEqual(len(r2.texts), len(set(r2.texts)), "no message was sent twice")
 

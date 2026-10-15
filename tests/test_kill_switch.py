@@ -254,7 +254,7 @@ class Alerts(unittest.TestCase):
         msg = messages.kill_alert("C9", b, "drawdown", r["new"]["drawdown"], "active")
         self.assertTrue(msg["plain"].startswith(cfg.BANNER))
         self.assertIn("FLAGGED: drawdown", msg["plain"])
-        self.assertIn("Shadow logging CONTINUES", msg["plain"])
+        self.assertIn("Shadow logging continues", msg["plain"])
         self.assertIn("nothing was traded", msg["plain"])
         self.assertIn("not backtested", msg["plain"])
         self.assertIn('strategies.C9.status to "retired"', msg["plain"])

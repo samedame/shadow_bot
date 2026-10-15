@@ -57,13 +57,22 @@ To pause everything, disable the workflow in the Actions tab. To stop one strate
 
 ## What you will see in the channel
 
-One compact embed per event, always starting `SHADOW - NOT A TRADE | ...`:
+One embed per event, always starting `SHADOW - NOT A TRADE | ...`. Every alert has the same shape so it can be read in seconds:
 
-* **Entry** (one per new would-be position): the ticket, credit at mid / base (25%) / natural, max loss, why it qualified, quote time and
-  freshness (two clocks: the underlying's last trade, and the option quotes' time, about 15 minutes before the feed file's stamp), and the
-  running shadow record against the backtest. C6 shows the REAL and MODEL credit side by side with the ratio.
-* **Exit** (once per position per reason): settlement or exit, P&L at mid / base / natural, running record. C6's MODEL twin posts a compact
-  exit message too.
+1. **The notification line** (the post's first line, what a phone lock screen shows): strategy, what happened, and the key numbers, e.g.
+   `C9 CONDOR_1D | NEW paper position: SPY iron condor, exp Wed Oct 14 | credit $0.82, max loss $718` or
+   `C9 CONDOR_1D | settled Thu Oct 15: WIN +$91.80`.
+2. **A badge and one plain sentence** under the title: what has to happen for the trade to work ("Keeps the full credit if SPY closes
+   between 773 and 783 on Wed Oct 14") or how it ended ("SPY's official close was 771.77, inside both short strikes ...").
+3. **Labelled fields.** Credit or cost per share and per contract, with the realistic fill first and the worst and mid fills as a range.
+
+* **Entry** (one per new would-be position, 🆕): the would-be ticket (calls and puts on their own lines, then the expiry), credit, max loss,
+  break-evens, why it qualified, the paper exit rule (C6, C3), data freshness (two clocks: the underlying's last trade, and the option
+  quotes' time, about 15 minutes before the feed file's stamp; a stale snapshot is flagged in the notification line itself), and the
+  shadow record in words, including "too early to judge" until 20 trades have closed. C6 shows the REAL and MODEL credit with the ratio.
+* **Exit** (once per position per reason, ✅ WIN / ❌ LOSS; for the C3 hedge, PAID OFF / COST): the result at the realistic fill with the
+  worst-to-mid range, fees, the trade, the running total and drawdown against its flag level, and the record with a scale check
+  (a max loss against the backtest's average per trade) while the sample is small. C6's MODEL twin posts an exit message too.
 * **C3 monthly gate line** (one per month, pass or fail), and an `UNCONFIRMED` line if the published closes never arrived.
 * **Weekly summary** (last trading day of the week): job runs, per-strategy record, drawdown against its stop, skips by reason, the
   C6 real/model comparison, and index-quote-versus-published differences.

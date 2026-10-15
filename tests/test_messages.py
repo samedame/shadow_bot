@@ -72,6 +72,7 @@ def check_message(tc: unittest.TestCase, msg: dict) -> str:
     plain = msg["plain"]
     tc.assertTrue(plain.startswith(cfg.BANNER + " | "), plain[:60])
     tc.assertLessEqual(len(plain), 1900)
+    tc.assertTrue(plain.isascii(), "the plain twin goes to the Actions log and the fallback post: ASCII only")
     low = plain.lower()
     for bad in FORBIDDEN:
         tc.assertNotIn(bad, low)
@@ -80,6 +81,15 @@ def check_message(tc: unittest.TestCase, msg: dict) -> str:
         tc.assertLessEqual(ds.embed_size(msg["embed"]), 6000)
         tc.assertLessEqual(len(msg["embed"]["description"]), 4096)
     return plain
+
+
+def fields_of(msg: dict) -> dict:
+    """The embed's labelled fields as {name: value}."""
+    return {f["name"]: f["value"] for f in (msg["embed"] or {}).get("fields", [])}
+
+
+def inline_names(msg: dict) -> list:
+    return [f["name"] for f in msg["embed"]["fields"] if f["inline"]]
 
 
 class Formats(unittest.TestCase):
@@ -110,13 +120,54 @@ class Formats(unittest.TestCase):
                 {"qty": -1, "strike": 350.5, "cp": -1}, {"qty": 1, "strike": 345.0, "cp": -1}]
         self.assertEqual(M.legs_line(legs), "SELL 1 604C / BUY 1 610C / SELL 1 350.5P / BUY 1 345P")
 
-    def test_quote_note(self):
-        self.assertEqual(M.quote_note(None, None), "quotes: n/a")
-        self.assertEqual(M.quote_note(meta(), None), "underlying last trade 16:00, option quotes ~16:04, file 5 min old, stale: no")
-        self.assertEqual(M.quote_note(meta(file_age_min=None), "closing print missing"),
-                         "underlying last trade 16:00, option quotes ~16:04, stale: YES (closing print missing)")
-        self.assertEqual(M.quote_note(meta(file_ts_utc=None), None),
-                         "underlying last trade 16:00, option quotes ~n/a, file 5 min old, stale: no")
+    def test_data_line(self):
+        self.assertEqual(M.data_line(None, None), "no quote data")
+        self.assertEqual(M.data_line(meta(), None), "underlying last traded 16:00, option quotes from about 16:04, feed file 5 min old")
+        self.assertEqual(M.data_line(meta(), None, et("2026-10-13 16:20")),
+                         "logged 16:20 ET, underlying last traded 16:00, option quotes from about 16:04, feed file 5 min old")
+        self.assertEqual(M.data_line(meta(file_age_min=None), "closing print missing"),
+                         "STALE (closing print missing); underlying last traded 16:00, option quotes from about 16:04")
+        self.assertEqual(M.data_line(meta(file_ts_utc=None), None), "underlying last traded 16:00, feed file 5 min old",
+                         "an unknown option-quote time is left out, not printed as n/a")
+
+    def test_day_and_days(self):
+        self.assertEqual(M.day("2026-10-14"), "Wed Oct 14")
+        self.assertEqual(M.day("2026-10-14T16:20:00-04:00"), "Wed Oct 14")
+        self.assertEqual(M.day("2027-01-01", "2026-11-02"), "Fri Jan 1, 2027", "the year appears only when it differs")
+        self.assertEqual(M.day("2026-11-12", "2026-10-13"), "Thu Nov 12")
+        self.assertEqual(M.day(None), "n/a")
+        self.assertEqual((M.days_word(1), M.days_word(30), M.days_word(0)), ("1 day", "30 days", "0 days"))
+
+    def test_verdict(self):
+        self.assertEqual(M.verdict(10.0)[0::2], ("WIN", "win"))
+        self.assertEqual(M.verdict(0.0)[0::2], ("WIN", "win"))
+        self.assertEqual(M.verdict(None)[0::2], ("WIN", "win"))
+        self.assertEqual(M.verdict(-0.01)[0::2], ("LOSS", "loss"))
+
+    def test_record_text_says_when_the_sample_is_too_small(self):
+        b = S.new_strategy_block("C9")
+        t0 = M.record_text("C9", b)
+        self.assertIn("No closed trades yet (needs 20 before it means anything)", t0)
+        self.assertIn("Backtest average +$1.47 / +$0.35", t0, "C9 is compared with the official-close settlement numbers")
+        S.update_stats(b, 10.0, 6.0, 12.0)
+        S.update_stats(b, -4.0, -6.0, -2.0)
+        t2 = M.record_text("C9", b)
+        self.assertIn("2 closed | average +$3.00 per trade at realistic fills, +$0.00 at worst fills", t2)
+        self.assertIn("Only 2 of 20 trades so far: too early to judge.", t2)
+        b["closed_n"] = 20
+        self.assertNotIn("too early", M.record_text("C9", b))
+        self.assertNotIn("For scale", M.early_note("C9", b, 718.0))
+        self.assertIn("For scale: a max loss is $718, against a backtest average of +$1.47 per trade.",
+                      M.early_note("C9", S.new_strategy_block("C9"), 718.0))
+        self.assertIn("Backtest average +$7.96 / -$0.34 (model-priced)", M.record_text("C6", S.new_strategy_block("C6")))
+        self.assertIn("cost ledger, not an edge test", M.record_text("C3", S.new_strategy_block("C3")))
+
+    def test_ticket_lines_never_start_with_buy_or_sell(self):
+        ctx, ch, pos = c9_position()
+        self.assertEqual(M.ticket_lines(pos), ["Would-be ticket (1 contract, paper)", "Calls    sell 604 / buy 610",
+                                               "Puts     sell 596 / buy 590", "Expires  Wed Oct 14 (1 day)"])
+        ctx, ch, pos = c3_position()
+        self.assertEqual(M.ticket_lines(pos)[1:], ["Puts     buy 665 / sell 595", "Expires  Fri Jan 1, 2027 (60 days)"])
 
     def test_option_quote_clock_is_the_file_time_minus_the_feed_delay_in_new_york_time(self):
         self.assertEqual(M.option_quote_hm({"file_ts_utc": "2026-10-13T20:19:32+00:00"}), "16:04")      # EDT, UTC-4
@@ -154,28 +205,50 @@ class C9Messages(unittest.TestCase):
         msg = M.entry_c9(pos, blk, ch.meta, ctx.now_et)
         text = check_message(self, msg)
         lines = text.split("\n")
-        self.assertEqual(lines[0], "SHADOW - NOT A TRADE | C9 CONDOR_1D | 2026-10-13 16:20 ET  (underlying last trade 16:00, option quotes ~16:04, file 5 min old, stale: no)")
-        self.assertIn("Would-be ticket : SELL 1 604C / BUY 1 610C / SELL 1 596P / BUY 1 590P   exp 2026-10-14", text)
-        self.assertIn("Credit          : mid $1.76 | base fill (25%) $1.73 | natural $1.70   Max loss $427", text)
-        self.assertIn("Underlying      : SPY 600.00 (close) | shorts 604C delta +0.16, 596P delta -0.16 (feed)", text)
-        self.assertIn("Why             : RV20 0.61% < median 0.74% (range-bound); expiry next trading day (2026-10-14)", text)
-        self.assertIn("Shadow record   : n=0 closed (primed at 20)", text)
-        self.assertNotIn("Selection check", text, "only shown when the Black-Scholes pick differs")
+        # the notification line says what happened and the two numbers that matter
+        self.assertEqual(lines[0], "SHADOW - NOT A TRADE | C9 CONDOR_1D | NEW paper position: SPY iron condor, exp Wed Oct 14 | "
+                                   "credit $1.73, max loss $427")
+        self.assertEqual(ds.payload_for(msg, True)["content"], lines[0])
+        self.assertEqual(lines[1], "Keeps the full credit if SPY closes between 596 and 604 on Wed Oct 14.")
+        self.assertEqual(lines[2:6], ["Would-be ticket (1 contract, paper)", "Calls    sell 604 / buy 610",
+                                      "Puts     sell 596 / buy 590", "Expires  Wed Oct 14 (1 day)"])
+        f = fields_of(msg)
+        self.assertEqual(f["Credit (realistic fill)"], "$1.73 per share = $173.00 per contract\nworst $1.70 | mid $1.76")
+        self.assertEqual(f["Max loss"], "$427 per contract\nif SPY ends beyond 590 or 610")
+        self.assertEqual(f["Break-evens"], "594.27 / 605.73")
+        self.assertEqual(f["Why now"], "Range-bound market: 20-day volatility 0.61% is below its median 0.74%.")
+        self.assertEqual(f["Basis"], "SPY 600.00 (close). Short strikes picked at about 16 delta: 604C +0.16, 596P -0.16 (feed).")
+        self.assertEqual(f["Data"], "logged 16:20 ET, underlying last traded 16:00, option quotes from about 16:04, feed file 5 min old")
+        self.assertIn("No closed trades yet (needs 20 before it means anything)", f["Record"])
+        self.assertNotIn("Strike check", f, "only shown when the Black-Scholes pick differs")
+        self.assertEqual(inline_names(msg), ["Credit (realistic fill)", "Max loss", "Break-evens"])
+        self.assertEqual(msg["embed"]["title"], "\U0001f195 C9 CONDOR_1D: new SPY iron condor, exp Wed Oct 14")
         self.assertEqual(msg["embed"]["color"], ds.COLORS["entry"])
+        # every field is in the plain twin too, as "Name: value"
+        for name, value in f.items():
+            self.assertIn(f"{name}: {value.splitlines()[0]}", text)
 
     def test_flagged_status_and_stale_quote_show_in_the_headline(self):
         ctx, ch, pos = c9_position()
         blk = ctx.block("C9")
         blk["status"] = "flagged"
-        text = M.entry_c9(pos, blk, ch.meta, ctx.now_et, "file older than 45 min")["plain"]
-        self.assertIn("C9 CONDOR_1D [FLAGGED] | 2026-10-13 16:20 ET", text)
-        self.assertIn("stale: YES (file older than 45 min)", text)
+        msg = M.entry_c9(pos, blk, ch.meta, ctx.now_et, "file older than 45 min")
+        text = msg["plain"]
+        first = text.split("\n")[0]
+        self.assertTrue(first.startswith("SHADOW - NOT A TRADE | C9 CONDOR_1D [FLAGGED] | NEW paper position"), first)
+        self.assertTrue(first.endswith("| STALE QUOTES"), "a stale price is visible in the notification itself")
+        self.assertIn("STALE QUOTES (file older than 45 min): treat these prices with caution.", text.split("\n")[1])
+        self.assertIn("STALE DATA: STALE (file older than 45 min); logged 16:20 ET", text)
+        self.assertIn("STALE DATA", fields_of(msg))
+        self.assertNotIn("Data", fields_of(msg))
 
     def test_selection_check_line_when_the_black_scholes_pick_differs(self):
         alt = {"differs": True, "call": 605.0, "put": 595.0, "feed_call": 604.0, "feed_put": 596.0}
         ctx, ch, pos = c9_position(alt=alt)
-        text = M.entry_c9(pos, ctx.block("C9"), ch.meta, ctx.now_et)["plain"]
-        self.assertIn("Selection check : Black-Scholes deltas on feed IV would pick 605C / 595P (feed delta picked 604C / 596P)", text)
+        msg = M.entry_c9(pos, ctx.block("C9"), ch.meta, ctx.now_et)
+        self.assertEqual(fields_of(msg)["Strike check"], "Black-Scholes deltas on feed IV would pick 605C / 595P "
+                                                         "(the feed's own deltas picked 604C / 596P).")
+        self.assertIn("Strike check: Black-Scholes deltas on feed IV would pick 605C / 595P", msg["plain"])
 
     def test_entry_never_reads_as_an_instruction(self):
         ctx, ch, pos = c9_position()
@@ -194,59 +267,100 @@ class C9Messages(unittest.TestCase):
         return pos, row, blk
 
     def test_exit_wordings(self):
-        for px, how in ((600.0, "inside both short strikes: full credit kept"), (604.0, "inside both short strikes: full credit kept"),
-                        (605.0, "call side breached (1.00 through 604)"), (595.0, "put side breached (1.00 through 596)"),
-                        (610.0, "call side breached (6.00 through 604)"),
-                        (611.0, "above the call wing 610: maximum loss region"), (589.0, "below the put wing 590: maximum loss region")):
+        for px, how in ((600.0, "inside both short strikes (596 to 604): the full credit was kept."),
+                        (604.0, "inside both short strikes (596 to 604): the full credit was kept."),
+                        (605.0, "1.00 past the 604 short call: part of the credit was given back."),
+                        (595.0, "1.00 past the 596 short put: part of the credit was given back."),
+                        (610.0, "6.00 past the 604 short call: part of the credit was given back."),
+                        (611.0, "above the 610 long call: maximum loss."), (589.0, "below the 590 long put: maximum loss.")):
             pos, row, blk = self.settle(px)
             msg = M.exit_c9(pos, row, px, blk)
             text = check_message(self, msg)
-            self.assertIn(f"Settle   : SPY official close {px:.2f} -> {how}", text, px)
+            self.assertIn(f"SPY's official close was {px:.2f}, {how}", text, px)
+            self.assertEqual(msg["embed"]["description"], f"SPY's official close was {px:.2f}, {how}", px)
 
     def test_exit_numbers_and_colour(self):
         pos, row, blk = self.settle(600.0)
         msg = M.exit_c9(pos, row, 600.0, blk)
-        text = msg["plain"]
-        self.assertIn("C9 CONDOR_1D | settled 2026-10-14", text)
-        self.assertIn("P&L (1 contract): mid +$176.00 | base +$172.80 | natural +$169.80", text)   # mid: no fees; base 173.00 - 0.20
-        self.assertIn("entry fees $0.20, no closing fee at expiry", text)
+        text = check_message(self, msg)
+        self.assertEqual(text.split("\n")[0], "SHADOW - NOT A TRADE | C9 CONDOR_1D | settled Wed Oct 14: WIN +$172.80")
+        f = fields_of(msg)
+        self.assertEqual(f["Result"], "+$172.80 per contract (realistic fill)")          # 173.00 - 0.20 entry fee
+        self.assertEqual(f["Fill range"], "worst +$169.80 | best (mid) +$176.00")        # mid: no fees
+        self.assertEqual(f["Fees"], "$0.20 to enter, none at expiry")
+        self.assertEqual(f["Trade"], "SELL 1 604C / BUY 1 610C / SELL 1 596P / BUY 1 590P | entered Tue Oct 13, expired Wed Oct 14")
+        self.assertEqual(f["Running total"], "+$172.80 over 1 closed | drawdown $0 (flag at $3,908)")
+        self.assertIn("Only 1 of 20 trades so far: too early to judge.", f["Record"])
+        self.assertIn("For scale: a max loss is $427, against a backtest average of +$1.47 per trade.", f["Record"])
+        self.assertEqual(inline_names(msg), ["Result", "Fill range", "Fees"])
+        self.assertEqual(msg["embed"]["title"], "\u2705 C9 CONDOR_1D: WIN +$172.80, settled Wed Oct 14")
         self.assertEqual(msg["embed"]["color"], ds.COLORS["win"])
         pos, row, blk = self.settle(620.0)
         msg = M.exit_c9(pos, row, 620.0, blk)
         self.assertEqual(msg["embed"]["color"], ds.COLORS["loss"])
-        self.assertIn("base -$427.20", msg["plain"])
-        self.assertIn("Record   : n=1 | mean $/trade base -$427.20", msg["plain"])
-        self.assertIn("drawdown $427", msg["plain"])
+        self.assertEqual(msg["embed"]["title"], "\u274c C9 CONDOR_1D: LOSS -$427.20, settled Wed Oct 14")
+        self.assertEqual(msg["plain"].split("\n")[0], "SHADOW - NOT A TRADE | C9 CONDOR_1D | settled Wed Oct 14: LOSS -$427.20")
+        self.assertEqual(fields_of(msg)["Result"], "-$427.20 per contract (realistic fill)")
+        self.assertIn("1 closed | average -$427.20 per trade", fields_of(msg)["Record"])
+        self.assertIn("drawdown $427 (flag at $3,908)", fields_of(msg)["Running total"])
+
+    def test_the_settle_notification_is_one_short_line_with_the_result(self):
+        """The first line is what a phone shows. It names the strategy, the day and WIN / LOSS with the dollars, and none of the
+        three fill variants or the backtest comparison that used to crowd the message."""
+        pos, row, blk = self.settle(600.0)
+        first = M.exit_c9(pos, row, 600.0, blk)["plain"].split("\n")[0]
+        self.assertLessEqual(len(first), 80, first)
+        self.assertNotIn("mid", first)
+        self.assertNotIn("backtest", first)
 
 
 class C6Messages(unittest.TestCase):
+    PROV = {"credit_base": 163.86, "index": "GVZ", "iv_pct": 22.48}
+
     def test_entry_with_the_provisional_model_credit(self):
         ctx, ch, pos = c6_position()
-        prov = {"credit_base": 163.86, "index": "GVZ", "iv_pct": 22.48}
-        text = check_message(self, M.entry_c6(pos, ctx.block("C6"), ch.meta, ctx.now_et, prov))
-        self.assertIn("C6 NONEQ_VRP GLD | 2026-10-13 16:20 ET", text.split("\n")[0])
-        self.assertIn("Would-be ticket : SELL 1 368P / BUY 1 360P   exp 2026-11-12 (30 DTE) | GLD 382.15, width $8", text)
-        self.assertIn("Credit (real)   : mid $1.34 | base fill (25%) $1.30 | natural $1.26   Max loss $670", text)
-        self.assertIn("Credit (model)  : base $1.64 per share, provisional (GVZ quote 22.48; the published close replaces it) | real / model 0.79", text)
-        self.assertIn("short put delta -0.25 (feed), target 0.25; expiry closest to 30 DTE", text)
-        self.assertIn("Shadow record   : GLD n=0 (mean base n/a) | pooled n=0 closed (primed at 20)", text)
+        msg = M.entry_c6(pos, ctx.block("C6"), ch.meta, ctx.now_et, self.PROV)
+        text = check_message(self, msg)
+        lines = text.split("\n")
+        self.assertEqual(lines[0], "SHADOW - NOT A TRADE | C6 NONEQ_VRP GLD | NEW paper position: put spread, exp Thu Nov 12 | "
+                                   "credit $1.30, max loss $670")
+        self.assertEqual(lines[1], "Keeps the full credit if GLD stays above 368 until Thu Nov 12 (30 days out; GLD is 382.15 now).")
+        self.assertEqual(lines[2:5], ["Would-be ticket (1 contract, paper)", "Puts     sell 368 / buy 360",
+                                      "Expires  Thu Nov 12 (30 days)"])
+        f = fields_of(msg)
+        self.assertEqual(f["Credit (real quotes)"], "$1.30 per share = $130.00 per contract\nworst $1.26 | mid $1.34")
+        self.assertEqual(f["Max loss"], "$670 per contract\nif GLD ends below 360")
+        self.assertEqual(f["Break-even"], "366.70")
+        self.assertEqual(f["Backtest-model credit"], "$1.64 per share (provisional, from the GVZ quote 22.48; the published close "
+                                                     "replaces it). Real quotes pay 79% of the model price.")
+        self.assertEqual(f["Why now"], "First trading day of the week. Short put delta -0.25 (feed), target 0.25; "
+                                       "expiry closest to 30 days. Spread width $8.")
+        self.assertEqual(f["Exit rule (paper)"], "Close when the mid cost to close is 50% of the entry credit or less, "
+                                                 "otherwise on the first day with 7 or fewer days left.")
+        self.assertTrue(f["Record"].startswith("GLD: 0 closed. All C6: No closed trades yet"), f["Record"])
+        self.assertEqual(msg["embed"]["title"], "\U0001f195 C6 NONEQ_VRP GLD: new put credit spread, exp Thu Nov 12")
 
     def test_entry_without_a_model_credit(self):
         ctx, ch, pos = c6_position()
-        text = M.entry_c6(pos, ctx.block("C6"), ch.meta, ctx.now_et, None)["plain"]
-        self.assertIn("Credit (model)  : n/a (no provisional index quote)", text)
+        msg = M.entry_c6(pos, ctx.block("C6"), ch.meta, ctx.now_et, None)
+        self.assertEqual(fields_of(msg)["Backtest-model credit"], "n/a (no provisional index quote)")
         pos["real_over_model"] = None
-        prov = {"credit_base": 163.86, "index": "GVZ", "iv_pct": 22.48}
-        text = M.entry_c6(pos, ctx.block("C6"), ch.meta, ctx.now_et, prov)["plain"]
-        self.assertNotIn("real / model", text)
+        text = M.entry_c6(pos, ctx.block("C6"), ch.meta, ctx.now_et, self.PROV)["plain"]
+        self.assertNotIn("of the model price", text)
+
+    def test_stale_entry_is_loud_in_the_notification(self):
+        ctx, ch, pos = c6_position()
+        msg = M.entry_c6(pos, ctx.block("C6"), ch.meta, ctx.now_et, None, "closing print missing")
+        self.assertTrue(msg["plain"].split("\n")[0].endswith("| STALE QUOTES"))
+        self.assertIn("STALE DATA", fields_of(msg))
 
     def test_sleeve_record_shows_the_mean(self):
         ctx, ch, pos = c6_position()
         blk = ctx.block("C6")
         S.update_stats(blk, 10.0, 6.0, 12.0, sleeve="GLD")
         S.update_stats(blk, 6.0, 2.0, 8.0, sleeve="GLD")
-        text = M.entry_c6(pos, blk, ch.meta, ctx.now_et, None)["plain"]
-        self.assertIn("GLD n=2 (mean base +$8.00)", text)
+        msg = M.entry_c6(pos, blk, ch.meta, ctx.now_et, None)
+        self.assertTrue(fields_of(msg)["Record"].startswith("GLD: 2 closed, average +$8.00. All C6: 2 closed | average +$8.00 per trade"))
 
     def close(self, reason):
         ctx, ch, pos = c6_position()
@@ -263,10 +377,15 @@ class C6Messages(unittest.TestCase):
         why = "profit target: mid-mark cost to close $0.50 <= 50% of the base entry credit $1.30"
         msg = M.exit_c6_real(pos, row, blk, why)
         text = check_message(self, msg)
-        self.assertIn("C6 NONEQ_VRP GLD | closed 2026-10-20 (profit)", text)
-        self.assertIn("Position : SELL 1 368P / BUY 1 360P   exp 2026-11-12 (entered 2026-10-13, credit base $1.30)", text)
-        self.assertIn(f"Exit     : {why}", text)
-        self.assertIn("(fees in: $0.10 + $0.10)", text)
+        self.assertEqual(text.split("\n")[0], "SHADOW - NOT A TRADE | C6 NONEQ_VRP GLD | closed Tue Oct 20 (profit): WIN +$76.30")
+        self.assertEqual(text.split("\n")[1], f"Why it closed: {why}")
+        f = fields_of(msg)
+        self.assertEqual(f["Result"], "+$76.30 per contract (realistic fill)")
+        self.assertEqual(f["Fill range"], "worst +$68.80 | best (mid) +$84.00")
+        self.assertEqual(f["Fees"], "$0.10 in + $0.10 out")
+        self.assertEqual(f["Trade"], "SELL 1 368P / BUY 1 360P | entered Tue Oct 13 for $1.30 per share, expiry Thu Nov 12")
+        self.assertEqual(f["Running total"], "+$76.30 over 1 closed | drawdown $0 (flag at $2,920)")
+        self.assertEqual(msg["embed"]["title"], "\u2705 C6 NONEQ_VRP GLD: WIN +$76.30, closed Tue Oct 20")
         self.assertEqual(msg["embed"]["color"], ds.COLORS["win"])
 
     def test_model_exit_text(self):
@@ -276,12 +395,16 @@ class C6Messages(unittest.TestCase):
                "pnl_mid": "12.0", "pnl_base": "7.5", "pnl_nat": "1.0"}
         msg = M.exit_c6_model(row, blk)
         text = check_message(self, msg)
-        self.assertIn("C6 NONEQ_VRP TLT MODEL | closed 2026-11-05 (dte)", text)
-        self.assertIn("MODEL spread (Black-Scholes, GVZ/VXTLT-priced; the backtest's own method): SELL 1 76P 2026-11-12 ; BUY 1 74P", text)
-        self.assertIn("Model record: n=1 | cumulative base +$7.50 | backtest mean +$7.96 per trade", text)
+        self.assertEqual(text.split("\n")[0], "SHADOW - NOT A TRADE | C6 NONEQ_VRP TLT MODEL | closed Thu Nov 5 (dte): WIN +$7.50")
+        self.assertIn("Model twin, not a real-quote trade: priced with Black-Scholes from the GVZ / VXTLT index", text)
+        f = fields_of(msg)
+        self.assertEqual(f["Model spread"], "SELL 1 76P 2026-11-12 ; BUY 1 74P 2026-11-12")
+        self.assertEqual(f["Model record"], "1 closed | cumulative +$7.50 | backtest average +$7.96 per trade")
         self.assertEqual(msg["embed"]["color"], ds.COLORS["win"])
         row["pnl_base"] = "-3.0"
-        self.assertEqual(M.exit_c6_model(row, blk)["embed"]["color"], ds.COLORS["loss"])
+        loss = M.exit_c6_model(row, blk)
+        self.assertEqual(loss["embed"]["color"], ds.COLORS["loss"])
+        self.assertIn("LOSS -$3.00", loss["plain"].split("\n")[0])
 
 
 class C3Messages(unittest.TestCase):
@@ -300,11 +423,20 @@ class C3Messages(unittest.TestCase):
         blk["premium_paid_since_reset"] = 646.35
         msg = M.entry_c3(pos, blk, ch.meta, self.GATE, D("2026-11-03"), ctx.now_et)
         text = check_message(self, msg)
-        self.assertIn("C3 SPY_HEDGE | confirmed 2026-11-03 (entry date 2026-11-02)", text.split("\n")[0])
-        self.assertIn("Would-be ticket : BUY 1 665P / SELL 1 595P   exp 2027-01-01 (60 DTE) | priced at the 2026-11-02 snapshot (SPY 700.00)", text)
-        self.assertIn("Debit           : mid $6.42 | base fill (25%) $6.46 | natural $6.50   Max loss $646 (net debit + fees)", text)
-        self.assertIn("Why             : gate OPEN on the published 2026-11-02 closes: VIX/VIX3M 0.824 < 0.90; VIX 14.00 <= 25th pct 14.50", text)
-        self.assertIn("premium paid since reset $646 | budget not set", text)
+        lines = text.split("\n")
+        self.assertEqual(lines[0], "SHADOW - NOT A TRADE | C3 SPY_HEDGE | NEW paper hedge: SPY put spread, exp Fri Jan 1, 2027 | "
+                                   "cost $6.46, max loss $646 | confirmed Tue Nov 3")
+        self.assertEqual(lines[1], "Insurance, not a profit trade: it pays off if SPY falls below 665 by Fri Jan 1, 2027. "
+                                   "The most it can lose is what it costs.")
+        f = fields_of(msg)
+        self.assertEqual(f["Cost (realistic fill)"], "$6.46 per share = $646.25 per contract\nworst $6.50 | mid $6.42")
+        self.assertEqual(f["Max loss"], "$646 per contract\n(net debit + fees)")
+        self.assertEqual(f["Max payoff"], "about $6,354 if SPY is 595 or lower")      # 70 points x 100 - the $646.25 debit
+        self.assertEqual(f["Break-even"], "SPY 658.54 at expiry")                     # 665 - 6.4625
+        self.assertEqual(f["Why now"], "Gate OPEN on the published 2026-11-02 closes: VIX/VIX3M 0.824 < 0.90; VIX 14.00 <= 25th pct 14.50.")
+        self.assertEqual(f["Exit rule (paper)"], "Close on the first trading day with 21 or fewer days left.")
+        self.assertEqual(f["Priced"], "at the Mon Nov 2 snapshot (SPY 700.00); confirmed Tue Nov 3")
+        self.assertEqual(f["Ledger"], "0 closed | premium paid since reset $646 | budget not set")
 
     def test_exit(self):
         ctx, ch, pos = c3_position()
@@ -316,10 +448,17 @@ class C3Messages(unittest.TestCase):
         row, _ = close_out(ctx, "C3", pos, ext, D("2026-12-10"), "dte")
         msg = M.exit_c3(pos, row, blk)
         text = check_message(self, msg)
-        self.assertIn("C3 SPY_HEDGE | closed 2026-12-10", text)
-        self.assertIn(f"Exit     : first trading day with DTE <= 21 ({row['dte_out']} DTE) at that day's quotes", text)
-        self.assertIn("debit base $6.46)", text)
+        self.assertEqual(text.split("\n")[0], "SHADOW - NOT A TRADE | C3 SPY_HEDGE | closed Thu Dec 10: hedge PAID OFF +$5,148.55")
+        self.assertIn("Closed on the first trading day with 21 or fewer days left", text)
+        self.assertNotIn("working as designed", text, "that sentence is only for a hedge that cost money")
+        self.assertIn("for a $6.46 per share debit", fields_of(msg)["Trade"])
         self.assertEqual(msg["embed"]["color"], ds.COLORS["win"])
+        # a hedge that expires worthless is a COST, not a loss to be alarmed by
+        row2 = dict(row, pnl_base="-646.35", pnl_nat="-650.0", pnl_mid="-642.0")
+        cost = M.exit_c3(pos, row2, blk)
+        self.assertIn("hedge COST -$646.35", cost["plain"].split("\n")[0])
+        self.assertIn("A hedge that costs money in a calm market is working as designed.", cost["plain"])
+        self.assertEqual(cost["embed"]["color"], ds.COLORS["loss"])
 
     def test_heartbeat(self):
         ctx, ch, pos = c3_position()
@@ -341,6 +480,8 @@ class Notices(unittest.TestCase):
         self.assertIn("One daily job at 16:20 ET", text)
         self.assertIn("Nothing here places or changes an order, and no message is a trade callout", text)
         self.assertIn("Tier 3", text)
+        self.assertIn("NEW = a paper position was logged. WIN / LOSS", text)
+        self.assertIn("Realistic fill = 25% of the bid/ask spread away from the mid price", text)
 
     def test_notice(self):
         text = check_message(self, M.notice("data unavailable", ["SPY chain: feed down", "GLD chain: feed down"]))
@@ -350,8 +491,9 @@ class Notices(unittest.TestCase):
         b = S.new_strategy_block("C6")
         b["status"] = "flagged"
         text = check_message(self, M.kill_alert("C6", b, "drawdown", "drawdown $3,000 from the running peak exceeds the $2,920 stop", "active"))
-        self.assertIn("C6 NONEQ_VRP | FLAGGED: drawdown", text)
-        self.assertIn("Status  : flagged (was active)", text)
+        self.assertEqual(text.split("\n")[0], "SHADOW - NOT A TRADE | C6 NONEQ_VRP | FLAGGED: drawdown")
+        self.assertIn("Status: flagged (was active). Shadow logging continues: nothing is paused and nothing was traded.", text)
+        self.assertIn('To retire it: set strategies.C6.status to "retired" in shadow_state.json', text)
 
 
 class Weekly(unittest.TestCase):

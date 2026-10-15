@@ -56,8 +56,9 @@ LAST_TRADE = {"SPY": "2026-10-13T16:00:00-04:00", "GLD": "2026-10-13T15:59:59-04
 
 
 def full_text(payload: dict) -> str:
-    """What a reader sees: the content line plus every embed's description."""
-    return "\n".join([payload.get("content") or ""] + [e.get("description", "") for e in payload.get("embeds") or []])
+    """What a reader sees: the content line plus every embed's description and labelled fields."""
+    return "\n".join([payload.get("content") or ""] + [e.get("description", "") for e in payload.get("embeds") or []] +
+                      [f"{f['name']}: {f['value']}" for e in payload.get("embeds") or [] for f in e.get("fields", [])])
 
 
 def load_raw(sym: str) -> dict:
@@ -146,9 +147,9 @@ class TheFilesParse(unittest.TestCase):
             with self.subTest(sym=sym):
                 meta = load_chain(sym).meta
                 self.assertEqual(M.option_quote_hm(meta), hhmm)
-                note = M.quote_note(meta, None)
-                self.assertTrue(note.startswith(f"underlying last trade {LAST_TRADE[sym][11:16]}, option quotes ~{hhmm}, file "), note)
-                self.assertTrue(note.endswith(" min old, stale: no"), note)
+                note = M.data_line(meta, None)
+                self.assertTrue(note.startswith(f"underlying last traded {LAST_TRADE[sym][11:16]}, option quotes from about {hhmm}, feed file "), note)
+                self.assertTrue(note.endswith(" min old"), note)
 
     def test_spy_option_quotes_are_newer_than_the_close_but_gld_and_tlt_trades_stop_at_it(self):
         spy, gld, tlt = (load_chain(s).meta for s in ("SPY", "GLD", "TLT"))
@@ -257,18 +258,32 @@ class TheWholeJob(Base):
             return next(t for t in texts if t.split("\n")[0].startswith(f"{cfg.BANNER} | {head} |"))
 
         c9_text = entry("C9 CONDOR_1D")
-        self.assertIn("(underlying last trade 16:00, option quotes ~16:04, file", c9_text.split("\n")[0])
-        self.assertIn("Would-be ticket : SELL 1 783C / BUY 1 791C / SELL 1 773P / BUY 1 765P   exp 2026-10-14", c9_text)
-        self.assertIn("Credit          : mid $0.83 | base fill (25%) $0.82 | natural $0.81   Max loss $718", c9_text)
-        self.assertIn("Underlying      : SPY 778.01 (close) | shorts 783C delta +0.16, 773P delta -0.17 (feed)", c9_text)
+        self.assertEqual(c9_text.split("\n")[0], f"{cfg.BANNER} | C9 CONDOR_1D | NEW paper position: SPY iron condor, exp Wed Oct 14 | "
+                                                 "credit $0.82, max loss $718")
+        self.assertIn("Calls    sell 783 / buy 791", c9_text)
+        self.assertIn("Puts     sell 773 / buy 765", c9_text)
+        self.assertIn("Keeps the full credit if SPY closes between 773 and 783 on Wed Oct 14.", c9_text)
+        self.assertIn("Credit (realistic fill): $0.82 per share = $82.00 per contract\nworst $0.81 | mid $0.83", c9_text)
+        self.assertIn("Max loss: $718 per contract\nif SPY ends beyond 765 or 791", c9_text)
+        self.assertIn("Basis: SPY 778.01 (close). Short strikes picked at about 16 delta: 783C +0.16, 773P -0.17 (feed).", c9_text)
+        self.assertIn("Data: logged 16:2", c9_text)
+        self.assertIn("underlying last traded 16:00, option quotes from about 16:0", c9_text)
+        self.assertNotIn("STALE", c9_text)
         gld = entry("C6 NONEQ_VRP GLD")
-        self.assertIn("SELL 1 368P / BUY 1 360P   exp 2026-11-13 (31 DTE) | GLD 381.65, width $8", gld)
-        self.assertIn("Credit (real)   : mid $1.52 | base fill (25%) $1.46 | natural $1.39   Max loss $655", gld)
-        self.assertIn("Credit (model)  : base $1.65 per share, provisional (GVZ quote 22.09; the published close replaces it) | real / model 0.88", gld)
+        self.assertIn("Puts     sell 368 / buy 360", gld)
+        self.assertIn("Expires  Fri Nov 13 (31 days)", gld)
+        self.assertIn("Keeps the full credit if GLD stays above 368 until Fri Nov 13 (31 days out; GLD is 381.65 now).", gld)
+        self.assertIn("worst $1.39 | mid $1.52", gld)
+        self.assertIn("Max loss: $655 per contract\nif GLD ends below 360", gld)
+        self.assertIn("Backtest-model credit: $1.65 per share (provisional, from the GVZ quote 22.09; the published close replaces it). "
+                      "Real quotes pay 88% of the model price.", gld)
         tlt = entry("C6 NONEQ_VRP TLT")
-        self.assertIn("SELL 1 76.5P / BUY 1 74.5P   exp 2026-11-13 (31 DTE) | TLT 78.37, width $2", tlt)
-        self.assertIn("Credit (real)   : mid $0.32 | base fill (25%) $0.31 | natural $0.30   Max loss $169", tlt)
-        self.assertIn("Credit (model)  : base $0.24 per share, provisional (VXTLT quote 14.54; the published close replaces it) | real / model 1.27", tlt)
+        self.assertIn("Puts     sell 76.5 / buy 74.5", tlt)
+        self.assertIn("Keeps the full credit if TLT stays above 76.5 until Fri Nov 13 (31 days out; TLT is 78.37 now).", tlt)
+        self.assertIn("worst $0.30 | mid $0.32", tlt)
+        self.assertIn("Max loss: $169 per contract\nif TLT ends below 74.5", tlt)
+        self.assertIn("Backtest-model credit: $0.24 per share (provisional, from the VXTLT quote 14.54; the published close replaces it). "
+                      "Real quotes pay 127% of the model price.", tlt)
         # a second run of the same session: no new position, no new message
         before = json.dumps(st["strategies"]["C9"]["open_positions"], sort_keys=True)
         snd2 = FakeSender()
