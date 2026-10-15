@@ -402,6 +402,35 @@ def persist(ctx: Ctx) -> None:
         export_state.export(os.path.join(r, cfg.STATE_FILE), os.path.join(r, cfg.LOG_FILE), os.path.join(r, cfg.EXPORT_FILE))
 
 
+def delivery_problem(res: dict) -> str:
+    """Plain-English reason this run left Discord messages undelivered, or '' when everything queued went out."""
+    left = int(res.get("kept") or 0)
+    if not left and not res.get("failed"):
+        return ""
+    return (f"{left} shadow-bot message(s) are still queued after this run (the Discord webhook is missing, revoked, "
+            f"or Discord was unreachable). Nothing is lost yet: they are retried at every run and dropped after 3 days. "
+            f"Check the repository secret {discord_shadow.ENV_NAME} (Settings > Secrets and variables > Actions).")
+
+
+def record_delivery(ctx: Ctx, res: dict) -> None:
+    """Leave `.delivery_failed` for the workflow's last step when messages are stuck; remove it when they are not. The job itself
+    stays green on purpose (an outage must not stop the guard's marker or trigger a second run); a quiet channel, though, looks
+    exactly like a quiet day, so a stuck queue has to be visible somewhere else - a red run, which GitHub emails."""
+    if ctx.dry_run or ctx.phase != "close":
+        return
+    path = os.path.join(ctx.root, cfg.DELIVERY_FAILED_FILE)
+    why = delivery_problem(res)
+    try:
+        if why:
+            with open(path, "w", encoding="utf-8") as f:
+                f.write(why + "\n")
+            print(f"[shadow] DELIVERY PROBLEM: {why}", file=sys.stderr)
+        elif os.path.exists(path):
+            os.remove(path)
+    except OSError:
+        traceback.print_exc()
+
+
 def flush_messages(ctx: Ctx, env, sender=None) -> dict:
     """Post the queued messages (state is saved after every post). Only the closing phase posts: a diagnostics-only run
     changes no state, so a post made from it could not be recorded as sent and would be repeated by the next run."""
@@ -493,6 +522,7 @@ def main(argv=None, *, feed=None, env=None, sender=None, clock=None) -> int:
             persist(ctx)
         res = flush_messages(ctx, env, sender)
         ctx.diag["messages"] = res
+        record_delivery(ctx, res)
         if not ctx.dry_run and ctx.phase == "close":
             state_mod.save(ctx.st, os.path.join(ctx.root, cfg.STATE_FILE))
     except Exception as exc:                             # noqa: BLE001

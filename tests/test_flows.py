@@ -1208,6 +1208,50 @@ class Outages(Flow):
         self.assertEqual(r2.state["outbox"], [])
         self.assertTrue(any("shadow bots online" in t for t in r2.texts))
 
+    def test_a_stuck_queue_leaves_a_marker_for_the_workflow_and_clears_it_when_it_drains(self):
+        marker = self.w.path(cfg.DELIVERY_FAILED_FILE)
+        self.w.sender = FakeSender(fail_with=[500])
+        r1 = self.w.run(f"{self.d0} 16:20", strategy="c9")
+        self.assertEqual(r1.code, 0)                                                      # the job itself stays green (see above)
+        self.assertTrue(os.path.exists(marker))
+        with open(marker, encoding="utf-8") as f:
+            text = f.read()
+        self.assertIn("2 shadow-bot message(s) are still queued", text)
+        self.assertIn("retried at every run and dropped after 3 days", text)
+        self.assertIn("SHADOW_DISCORD_WEBHOOK_URL", text)
+        self.assertIn("DELIVERY PROBLEM", r1.stderr)
+        r2 = self.w.run(f"{self.d1} 16:20", strategy="c9")
+        self.assertEqual(r2.state["outbox"], [])
+        self.assertFalse(os.path.exists(marker), "a drained queue must clear the marker or the next run would fail for nothing")
+
+    def test_a_revoked_or_missing_webhook_also_leaves_the_marker(self):
+        marker = self.w.path(cfg.DELIVERY_FAILED_FILE)
+        self.w.sender = FakeSender(fail_with=[404, 404, 404, 404])
+        self.w.run(f"{self.d0} 16:20", strategy="c9")
+        self.assertTrue(os.path.exists(marker))
+        os.remove(marker)
+        self.w.run(f"{self.d1} 16:20", strategy="c9", webhook=None)
+        self.assertTrue(os.path.exists(marker))
+        with open(marker, encoding="utf-8") as f:
+            self.assertRegex(f.read(), r"\d+ shadow-bot message\(s\) are still queued")
+
+    def test_a_normal_run_a_dry_run_and_an_intraday_run_leave_no_marker(self):
+        marker = self.w.path(cfg.DELIVERY_FAILED_FILE)
+        self.w.run(f"{self.d0} 16:20", strategy="c9")
+        self.assertFalse(os.path.exists(marker))
+        self.w.run(f"{self.d1} 16:20", strategy="c9", dry_run=True, webhook=None)
+        self.assertFalse(os.path.exists(marker))
+        self.w.run(f"{self.d1} 14:00", strategy="c9", webhook=None)                       # before the close: diagnostics only, posts nothing
+        self.assertFalse(os.path.exists(marker))
+
+    def test_delivery_problem_wording_and_the_cases_it_ignores(self):
+        import shadow_job
+        self.assertEqual(shadow_job.delivery_problem({"sent": 3, "fallback": 0, "failed": 0, "kept": 0, "dry": 0}), "")
+        self.assertEqual(shadow_job.delivery_problem({}), "")
+        self.assertEqual(shadow_job.delivery_problem({"skipped": "intraday", "queued": 4}), "")
+        self.assertIn("1 shadow-bot message(s)", shadow_job.delivery_problem({"sent": 0, "failed": 1, "kept": 1}))
+        self.assertIn("5 shadow-bot message(s)", shadow_job.delivery_problem({"sent": 0, "failed": 0, "kept": 5}))
+
     def test_a_message_that_cannot_be_delivered_for_four_days_is_dropped(self):
         days = [self.d0]
         while len(days) < 5:

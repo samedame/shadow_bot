@@ -71,6 +71,7 @@ The weekly summary message prints the same drift numbers for the index quotes, t
 | `diag_log.jsonl` | One line per run, trimmed to the newest 600 lines once it passes 1,000. |
 | `data/*.csv` | Caches of closes, published index closes and the T-bill. Extended by every run; do not edit. |
 | `.run_guard_shadow.json` | The "already ran today" marker. Delete a day's entry only to force a second scheduled-style run on that day. |
+| `.delivery_failed` | Written by a run that left Discord messages in the outbox, read by the workflow's last step, removed by the next run that empties the queue. Never committed. |
 | `shadow_state_export.json` | A shadow-only export in the shape of the live book's cross-bot export. **Never connect it to the live combined-drawdown monitor.** |
 
 ## 5. Status, flags, retiring and resetting
@@ -119,7 +120,7 @@ version of this bot would have to run earlier than 16:15, and that is a differen
 | "shadow job crashed" message | Nothing was saved from that run; the backup trigger may retry | Open the Actions log. The traceback names the line. The guard wrote no marker, so a manual "Run workflow" before 16:30 ET (or the next day's run) recovers. |
 | No message at all after 16:35 ET on a trading day | Nothing ran, or it ran and had nothing to say | Actions tab: was there a run? If not, the Worker did not dispatch (`docs/OPEN_SCHEDULER.md`). Missed sessions are counted as `missed_run` and appear in the weekly summary. |
 | "run started N min after its target" | Settled and exited, opened nothing new | The trigger was late. Check the Worker. |
-| Messages missing but runs look fine | Discord rejected or refused them | The failed messages stay in the outbox for 3 days and go out on the next run. A revoked webhook (404) stops posting entirely; create a new one and update the secret. The log and state are unaffected. |
+| The run is red, and only its last step ("Fail the run if Discord messages are stuck") failed; GitHub emails you. Or messages are missing but runs look fine | Discord rejected or refused them (webhook missing, revoked, or Discord down). The job itself stays green and saved everything | The failed messages stay in the outbox for 3 days and go out on the next run; the red step clears itself once the queue is empty. A revoked webhook (404) or a missing secret stops posting entirely: create a new webhook and update the secret `SHADOW_DISCORD_WEBHOOK_URL`. The log and state are unaffected. A broken webhook is only noticed when a message is first sent, so a quiet channel on a quiet day proves nothing; the "online" message and the weekly summary are the proof it works. |
 | `C3 ... UNCONFIRMED` | The published VIX/VIX3M closes for the entry day never arrived in 5 sessions | No hedge that month. Check that Cboe's history files still update. |
 | The push step fails five times | That run's state never reached the repository (messages already posted stay in Discord) | Rerun the workflow before 16:30 ET: positions are keyed by id, so the rerun converges, at the price of repeating that day's Discord messages. Later than 16:30 ET that day's entries are not recorded. |
 | `CalendarRange` / "calendar table ends 2028-12-31" notice | The holiday tables end in 2028 | Extend `EXPLICIT_HOLIDAYS` and `EXPLICIT_EARLY_CLOSES` in `nyse_calendar.py` before the end of 2028. |
