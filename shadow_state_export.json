@@ -3,7 +3,7 @@
   "shadow": true,
   "banner": "SHADOW - NOT A TRADE",
   "note": "Shadow-only export. Positions hold no money. Not for the live combined-drawdown monitor.",
-  "generated_at": "2026-10-14T20:23:48+00:00",
+  "generated_at": "2026-10-15T20:23:41+00:00",
   "strategies": {
     "C9": {
       "strategy_id": "C9",
@@ -12,28 +12,41 @@
       "primed": false,
       "open_positions": [
         {
-          "id": "C9-2026-10-14",
+          "id": "C9-2026-10-15",
           "sleeve": "SPY",
           "version": "real",
-          "entry_date": "2026-10-14",
-          "expiry": "2026-10-15",
+          "entry_date": "2026-10-15",
+          "expiry": "2026-10-16",
           "legs": [
-            "SELL 1 775C 2026-10-15",
-            "BUY 1 783C 2026-10-15",
-            "SELL 1 763P 2026-10-15",
-            "BUY 1 755P 2026-10-15"
+            "SELL 1 777C 2026-10-16",
+            "BUY 1 785C 2026-10-16",
+            "SELL 1 766P 2026-10-16",
+            "BUY 1 758P 2026-10-16"
           ],
-          "max_loss": 708.2,
+          "max_loss": 719.2,
           "shadow": true
         }
       ],
-      "closed_history": [],
-      "cumulative_pnl_base": 0.0,
-      "cumulative_pnl_natural": 0.0,
-      "running_peak": 0.0,
+      "closed_history": [
+        {
+          "id": "C9-2026-10-14",
+          "sleeve": "SPY",
+          "entry_date": "2026-10-14",
+          "exit_date": "2026-10-15",
+          "exit_reason": "expiry",
+          "net_pnl_base": 91.8,
+          "net_pnl_natural": 90.8,
+          "net_pnl_mid": 93.0,
+          "fill_vs_mid": -1.2,
+          "shadow": true
+        }
+      ],
+      "cumulative_pnl_base": 91.8,
+      "cumulative_pnl_natural": 90.8,
+      "running_peak": 91.8,
       "drawdown": 0.0,
       "max_drawdown": 0.0,
-      "trades_since_reset": 0,
+      "trades_since_reset": 1,
       "shadow": true
     },
     "C6": {
