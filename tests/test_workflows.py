@@ -102,6 +102,21 @@ class ShadowWorkflow(unittest.TestCase):
     def test_state_is_committed_back_even_when_the_job_failed(self):
         self.assertRegex(SHADOW, r"- name: Commit state\n        if: \$\{\{ always\(\)")
 
+    def test_a_stuck_discord_queue_turns_the_run_red_after_state_is_saved(self):
+        names = re.findall(r"(?m)^      - name: (.+)$", SHADOW)
+        last = "Fail the run if Discord messages are stuck"
+        self.assertEqual(names[-1], last)
+        self.assertLess(names.index("Commit state"), names.index(last))                  # save first, announce last
+        step = SHADOW[SHADOW.index(f"- name: {last}"):]
+        self.assertIn("if: ${{ always() && !inputs.dry_run }}", step)
+        self.assertIn(f"[ -e {cfg.DELIVERY_FAILED_FILE} ]", step)
+        self.assertIn("exit 1", step)
+        self.assertIn("::error", step)
+
+    def test_the_delivery_marker_is_never_committed(self):
+        m = re.search(r"for f in ([^;]+); do", SHADOW)
+        self.assertNotIn(cfg.DELIVERY_FAILED_FILE, m.group(1).split())
+
     def test_every_state_file_is_in_the_commit_list(self):
         m = re.search(r"for f in ([^;]+); do", SHADOW)
         self.assertIsNotNone(m)
@@ -137,6 +152,9 @@ class IgnoreRules(unittest.TestCase):
         for path in (cfg.STATE_FILE, cfg.LOG_FILE, cfg.DIAG_FILE, cfg.EXPORT_FILE, cfg.GUARD_FILE, cfg.CLOSES_FILE, cfg.INDICES_FILE,
                      cfg.TBILL_FILE):
             self.assertFalse(self.ignored(path), path)
+
+    def test_the_delivery_marker_is_ignored(self):
+        self.assertTrue(self.ignored(cfg.DELIVERY_FAILED_FILE))
 
     def test_noise_is_ignored(self):
         for path in ("__pycache__/x.pyc", "tests/__pycache__/y.cpython-313.pyc", "shadow_state.json.tmp", ".pytest_cache/v", ".venv/bin/python"):

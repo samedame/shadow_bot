@@ -249,7 +249,12 @@ class Cache(unittest.TestCase):
             self.assertGreater(len(m.closes[sym]), 250, sym)
         self.assertGreater(len(m.index_series("VIX")), 250)
         self.assertGreater(len(m.tbill), 50)
-        self.assertEqual(m.prov, {})                                                      # a committed seed holds only published values
+        # This reads the repo's LIVE cache, which the daily job rewrites (and legitimately commits provisional index rows
+        # to, until Cboe publishes the official close). The old assertion `m.prov == {}` therefore failed the day after the
+        # first real run. What must always hold: provisional rows are recent, because prune_prov() expires them after ten days.
+        newest = m.closes["SPY"].dates[-1]
+        for (name, d) in m.prov:
+            self.assertLessEqual((newest - d).days, 12, f"stale provisional value for {name} {d} is piling up in the cache")
 
 
 class PruneAndTrim(unittest.TestCase):

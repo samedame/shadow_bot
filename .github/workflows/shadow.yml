@@ -87,3 +87,13 @@ jobs:
           done
           echo "push failed after 5 attempts" >&2
           exit 1
+
+      # The job stays green when Discord is down, the webhook secret is missing or revoked (its messages wait in the queue and
+      # are retried), so a stuck queue would otherwise look like a quiet day. This step makes it a red run, which GitHub emails.
+      - name: Fail the run if Discord messages are stuck
+        if: ${{ always() && !inputs.dry_run }}
+        run: |
+          if [ -e .delivery_failed ]; then
+            echo "::error title=Shadow bot messages not delivered::$(cat .delivery_failed)"
+            exit 1
+          fi

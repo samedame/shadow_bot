@@ -171,6 +171,8 @@ DIAG_MAX_LINES = 1000          # rotate: when the diagnostics log passes this ma
 DIAG_KEEP_LINES = 600
 EXPORT_FILE = "shadow_state_export.json"
 GUARD_FILE = ".run_guard_shadow.json"
+DELIVERY_FAILED_FILE = ".delivery_failed"       # written (never committed) when messages are still queued after a run; the
+                                                # workflow's last step turns that into a red run, the only signal outside Discord
 DATA_DIR = "data"
 CLOSES_FILE = "data/closes.csv"
 INDICES_FILE = "data/indices.csv"
