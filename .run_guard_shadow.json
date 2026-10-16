@@ -10,5 +10,11 @@
   "late_min": 0.9,
   "status": "on_time",
   "trigger": "cf-scheduler"
+ },
+ "shadow-daily:2026-10-16": {
+  "done_at": "2026-10-16T16:22:53-04:00",
+  "late_min": 0.2,
+  "status": "on_time",
+  "trigger": "cf-scheduler"
  }
 }
