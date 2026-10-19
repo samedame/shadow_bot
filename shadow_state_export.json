@@ -3,7 +3,7 @@
   "shadow": true,
   "banner": "SHADOW - NOT A TRADE",
   "note": "Shadow-only export. Positions hold no money. Not for the live combined-drawdown monitor.",
-  "generated_at": "2026-10-16T20:22:52+00:00",
+  "generated_at": "2026-10-19T20:24:40+00:00",
   "strategies": {
     "C9": {
       "strategy_id": "C9",
@@ -12,18 +12,18 @@
       "primed": false,
       "open_positions": [
         {
-          "id": "C9-2026-10-16",
+          "id": "C9-2026-10-19",
           "sleeve": "SPY",
           "version": "real",
-          "entry_date": "2026-10-16",
-          "expiry": "2026-10-19",
+          "entry_date": "2026-10-19",
+          "expiry": "2026-10-20",
           "legs": [
-            "SELL 1 770C 2026-10-19",
-            "BUY 1 778C 2026-10-19",
-            "SELL 1 753P 2026-10-19",
-            "BUY 1 745P 2026-10-19"
+            "SELL 1 772C 2026-10-20",
+            "BUY 1 780C 2026-10-20",
+            "SELL 1 761P 2026-10-20",
+            "BUY 1 753P 2026-10-20"
           ],
-          "max_loss": 707.2,
+          "max_loss": 720.2,
           "shadow": true
         }
       ],
@@ -51,14 +51,26 @@
           "net_pnl_mid": -195.0,
           "fill_vs_mid": -1.2,
           "shadow": true
+        },
+        {
+          "id": "C9-2026-10-16",
+          "sleeve": "SPY",
+          "entry_date": "2026-10-16",
+          "exit_date": "2026-10-19",
+          "exit_reason": "expiry",
+          "net_pnl_base": 92.8,
+          "net_pnl_natural": 91.8,
+          "net_pnl_mid": 94.0,
+          "fill_vs_mid": -1.2,
+          "shadow": true
         }
       ],
-      "cumulative_pnl_base": -104.4,
-      "cumulative_pnl_natural": -106.4,
+      "cumulative_pnl_base": -11.6,
+      "cumulative_pnl_natural": -14.6,
       "running_peak": 91.8,
-      "drawdown": 196.2,
+      "drawdown": 103.4,
       "max_drawdown": 196.2,
-      "trades_since_reset": 2,
+      "trades_since_reset": 3,
       "shadow": true
     },
     "C6": {
@@ -66,7 +78,34 @@
       "name": "NONEQ_VRP",
       "status": "active",
       "primed": false,
-      "open_positions": [],
+      "open_positions": [
+        {
+          "id": "C6-GLD-2026-10-19",
+          "sleeve": "GLD",
+          "version": "real",
+          "entry_date": "2026-10-19",
+          "expiry": "2026-11-20",
+          "legs": [
+            "SELL 1 366P 2026-11-20",
+            "BUY 1 358P 2026-11-20"
+          ],
+          "max_loss": 655.85,
+          "shadow": true
+        },
+        {
+          "id": "C6-TLT-2026-10-19",
+          "sleeve": "TLT",
+          "version": "real",
+          "entry_date": "2026-10-19",
+          "expiry": "2026-11-20",
+          "legs": [
+            "SELL 1 77P 2026-11-20",
+            "BUY 1 75P 2026-11-20"
+          ],
+          "max_loss": 173.35,
+          "shadow": true
+        }
+      ],
       "closed_history": [],
       "cumulative_pnl_base": 0.0,
       "cumulative_pnl_natural": 0.0,
