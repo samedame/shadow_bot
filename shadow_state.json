@@ -4,123 +4,125 @@
   "C9": {
    "status": "active",
    "primed": false,
-   "closed_n": 3,
+   "closed_n": 4,
    "unpriced_n": 0,
-   "cum_pnl_mid": -8.0,
-   "cum_pnl_base": -11.6,
-   "cum_pnl_nat": -14.6,
+   "cum_pnl_mid": 73.0,
+   "cum_pnl_base": 68.2,
+   "cum_pnl_nat": 64.2,
    "peak": 91.8,
-   "drawdown": 103.4,
+   "drawdown": 23.6,
    "max_drawdown": 196.2,
    "recent_pnl_base": [
     91.8,
     -196.2,
-    92.8
+    92.8,
+    79.8
    ],
    "recent_pnl_nat": [
     90.8,
     -197.2,
-    91.8
+    91.8,
+    78.8
    ],
    "open_positions": [
     {
-     "id": "C9-2026-10-19",
+     "id": "C9-2026-10-20",
      "strategy": "C9",
      "sleeve": "SPY",
      "version": "real",
-     "entry_date": "2026-10-19",
-     "quote_time": "2026-10-19T16:00:00-04:00",
-     "quote_file_ts_utc": "2026-10-19T20:20:40+00:00",
-     "opened_at": "2026-10-19T16:21:15-04:00",
-     "expiry": "2026-10-20",
+     "entry_date": "2026-10-20",
+     "quote_time": "2026-10-20T15:59:59-04:00",
+     "quote_file_ts_utc": "2026-10-20T20:19:52+00:00",
+     "opened_at": "2026-10-20T16:20:57-04:00",
+     "expiry": "2026-10-21",
      "dte_in": 1,
-     "spot_in": 766.48,
+     "spot_in": 769.32,
      "legs": [
       {
-       "label": "SELL 1 772C 2026-10-20",
+       "label": "SELL 1 775C 2026-10-21",
        "cp": 1,
-       "strike": 772.0,
-       "expiry": "2026-10-20",
+       "strike": 775.0,
+       "expiry": "2026-10-21",
        "qty": -1,
-       "bid": 0.39,
-       "ask": 0.4,
-       "mid": 0.395,
-       "iv": 0.1186,
-       "delta": 0.1583,
+       "bid": 0.34,
+       "ask": 0.35,
+       "mid": 0.345,
+       "iv": 0.1237,
+       "delta": 0.1371,
        "delta_src": "feed"
       },
       {
-       "label": "BUY 1 780C 2026-10-20",
+       "label": "BUY 1 783C 2026-10-21",
        "cp": 1,
-       "strike": 780.0,
-       "expiry": "2026-10-20",
+       "strike": 783.0,
+       "expiry": "2026-10-21",
        "qty": 1,
-       "bid": 0.01,
-       "ask": 0.02,
-       "mid": 0.015,
-       "iv": 0.1318,
-       "delta": 0.0094,
+       "bid": 0.0,
+       "ask": 0.01,
+       "mid": 0.005,
+       "iv": 0.1227,
+       "delta": 0.0058,
        "delta_src": "feed"
       },
       {
-       "label": "SELL 1 761P 2026-10-20",
+       "label": "SELL 1 763P 2026-10-21",
        "cp": -1,
-       "strike": 761.0,
-       "expiry": "2026-10-20",
+       "strike": 763.0,
+       "expiry": "2026-10-21",
        "qty": -1,
-       "bid": 0.53,
-       "ask": 0.54,
-       "mid": 0.535,
-       "iv": 0.1548,
-       "delta": -0.1633,
+       "bid": 0.48,
+       "ask": 0.49,
+       "mid": 0.485,
+       "iv": 0.154,
+       "delta": -0.151,
        "delta_src": "feed"
       },
       {
-       "label": "BUY 1 753P 2026-10-20",
+       "label": "BUY 1 755P 2026-10-21",
        "cp": -1,
-       "strike": 753.0,
-       "expiry": "2026-10-20",
+       "strike": 755.0,
+       "expiry": "2026-10-21",
        "qty": 1,
-       "bid": 0.1,
-       "ask": 0.11,
-       "mid": 0.105,
-       "iv": 0.1943,
-       "delta": -0.0357,
+       "bid": 0.07,
+       "ask": 0.08,
+       "mid": 0.075,
+       "iv": 0.1858,
+       "delta": -0.026,
        "delta_src": "feed"
       }
      ],
      "entry_cf": {
-      "mid": 81.0,
-      "base": 80.0,
-      "nat": 79.0,
-      "x3": 78.0
+      "mid": 75.0,
+      "base": 74.0,
+      "nat": 73.0,
+      "x3": 72.0
      },
      "entry_units": 4,
-     "max_loss": 720.2,
-     "med_rel_spread": 0.060277275467148866,
+     "max_loss": 726.2,
+     "med_rel_spread": 0.08115942028985497,
      "flags": {
       "stale": false
      },
      "exit_attempts": 0,
      "gate": {
-      "prev": "2026-10-16",
-      "rv20": 0.00659410909350925,
-      "median": 0.006616717259891242,
+      "prev": "2026-10-19",
+      "rv20": 0.005619912759466966,
+      "median": 0.0065907815856223965,
       "window": 20
      },
      "gate_alt": true,
      "alt": {
-      "call": 771.0,
-      "put": 760.0,
+      "call": 774.0,
+      "put": 763.0,
       "differs": true,
-      "feed_call": 772.0,
-      "feed_put": 761.0
+      "feed_call": 775.0,
+      "feed_put": 763.0
      },
      "strikes": {
-      "k_call": 772.0,
-      "k_put": 761.0,
-      "k_call_wing": 780.0,
-      "k_put_wing": 753.0
+      "k_call": 775.0,
+      "k_put": 763.0,
+      "k_call_wing": 783.0,
+      "k_put_wing": 755.0
      },
      "why": "RV20 below its 20-day median; next-trading-day expiry"
     }
@@ -128,13 +130,15 @@
    "exit_alerts": {
     "C9-2026-10-14:expiry": "2026-10-15T16:20:58-04:00",
     "C9-2026-10-15:expiry": "2026-10-16T16:20:11-04:00",
-    "C9-2026-10-16:expiry": "2026-10-19T16:21:15-04:00"
+    "C9-2026-10-16:expiry": "2026-10-19T16:21:15-04:00",
+    "C9-2026-10-19:expiry": "2026-10-20T16:20:57-04:00"
    },
    "entries_done": [
     "C9-2026-10-14",
     "C9-2026-10-15",
     "C9-2026-10-16",
-    "C9-2026-10-19"
+    "C9-2026-10-19",
+    "C9-2026-10-20"
    ],
    "quality": [
     {
@@ -159,6 +163,12 @@
      "date": "2026-10-19",
      "flag": false,
      "med_rel_spread": 0.060277275467148866,
+     "why": "ticket"
+    },
+    {
+     "date": "2026-10-20",
+     "flag": false,
+     "med_rel_spread": 0.08115942028985497,
      "why": "ticket"
     }
    ],
@@ -239,7 +249,11 @@
       "k_short": 366.0,
       "k_long": 358.0
      },
-     "width": 8.0
+     "width": 8.0,
+     "last_mark": {
+      "date": "2026-10-20",
+      "cost_to_close": 162.50000000000003
+     }
     },
     {
      "id": "C6-TLT-2026-10-19",
@@ -301,7 +315,11 @@
       "k_short": 77.0,
       "k_long": 75.0
      },
-     "width": 2.0
+     "width": 2.0,
+     "last_mark": {
+      "date": "2026-10-20",
+      "cost_to_close": 19.0
+     }
     }
    ],
    "exit_alerts": {},
@@ -347,7 +365,7 @@
       "entry_date": "2026-10-19",
       "pair_id": "C6-GLD-2026-10-19",
       "prov_iv": 22.23,
-      "status": "pending"
+      "status": "open"
      },
      {
       "id": "C6M-TLT-2026-10-19",
@@ -355,7 +373,7 @@
       "entry_date": "2026-10-19",
       "pair_id": "C6-TLT-2026-10-19",
       "prov_iv": 15.15,
-      "status": "pending"
+      "status": "open"
      }
     ],
     "closed_n": 0,
@@ -382,9 +400,13 @@
      "model_id": "C6M-GLD-2026-10-19",
      "real_credit_base": 144.24999999999997,
      "model_credit_base_prov": 165.39612981148642,
-     "model_credit_base": null,
+     "model_credit_base": 165.1280798164276,
      "real_exit_mark": null,
-     "model_exit_mark": null
+     "model_exit_mark": null,
+     "model_credit_mid": 176.8460663544161,
+     "model_Ks": 366.0,
+     "model_Kl": 358.0,
+     "model_expiry": "2026-11-18"
     },
     {
      "pair_id": "C6-TLT-2026-10-19",
@@ -394,9 +416,13 @@
      "model_id": "C6M-TLT-2026-10-19",
      "real_credit_base": 26.75,
      "model_credit_base_prov": 25.57791392951094,
-     "model_credit_base": null,
+     "model_credit_base": 25.57791392951094,
      "real_exit_mark": null,
-     "model_exit_mark": null
+     "model_exit_mark": null,
+     "model_credit_mid": 28.577913929510945,
+     "model_Ks": 77.0,
+     "model_Kl": 75.0,
+     "model_expiry": "2026-11-18"
     }
    ]
   },
@@ -431,11 +457,11 @@
  },
  "last_run": {
   "trigger": "cf-scheduler",
-  "at_et": "2026-10-19T16:21:15-04:00",
-  "session": "2026-10-19",
+  "at_et": "2026-10-20T16:20:57-04:00",
+  "session": "2026-10-20",
   "phase": "close",
   "guard": "on_time",
-  "late_min": 1.0,
+  "late_min": 0.9,
   "data_ok": true,
   "strategies": [
    "C3",
@@ -456,7 +482,9 @@
   "exit:C9-2026-10-16:expiry": "2026-10-19T16:21:15-04:00",
   "entry:C9-2026-10-19": "2026-10-19T16:21:15-04:00",
   "entry:C6-GLD-2026-10-19": "2026-10-19T16:21:15-04:00",
-  "entry:C6-TLT-2026-10-19": "2026-10-19T16:21:15-04:00"
+  "entry:C6-TLT-2026-10-19": "2026-10-19T16:21:15-04:00",
+  "exit:C9-2026-10-19:expiry": "2026-10-20T16:20:57-04:00",
+  "entry:C9-2026-10-20": "2026-10-20T16:20:57-04:00"
  },
  "skips": {
   "2026-W42": {
@@ -477,12 +505,12 @@
  },
  "runs": {
   "2026-W42": 4,
-  "2026-W43": 1
+  "2026-W43": 2
  },
  "last_session": {
-  "C9": "2026-10-19",
-  "C6": "2026-10-19",
-  "C3": "2026-10-19"
+  "C9": "2026-10-20",
+  "C6": "2026-10-20",
+  "C3": "2026-10-20"
  },
  "notes": {
   "prov_vs_pub": [
@@ -581,6 +609,30 @@
     "date": "2026-10-16",
     "prov": 20.59,
     "pub": 20.5
+   },
+   {
+    "name": "GVZ",
+    "date": "2026-10-19",
+    "prov": 22.23,
+    "pub": 22.23
+   },
+   {
+    "name": "VXTLT",
+    "date": "2026-10-19",
+    "prov": 15.15,
+    "pub": 15.15
+   },
+   {
+    "name": "VIX",
+    "date": "2026-10-19",
+    "prov": 18.41,
+    "pub": 18.44
+   },
+   {
+    "name": "VIX3M",
+    "date": "2026-10-19",
+    "prov": 19.58,
+    "pub": 19.6
    }
   ]
  }
