@@ -3,30 +3,14 @@
   "shadow": true,
   "banner": "SHADOW - NOT A TRADE",
   "note": "Shadow-only export. Positions hold no money. Not for the live combined-drawdown monitor.",
-  "generated_at": "2026-10-28T20:23:39+00:00",
+  "generated_at": "2026-10-29T20:23:44+00:00",
   "strategies": {
     "C9": {
       "strategy_id": "C9",
       "name": "CONDOR_1D",
       "status": "active",
       "primed": false,
-      "open_positions": [
-        {
-          "id": "C9-2026-10-28",
-          "sleeve": "SPY",
-          "version": "real",
-          "entry_date": "2026-10-28",
-          "expiry": "2026-10-29",
-          "legs": [
-            "SELL 1 779C 2026-10-29",
-            "BUY 1 787C 2026-10-29",
-            "SELL 1 766P 2026-10-29",
-            "BUY 1 758P 2026-10-29"
-          ],
-          "max_loss": 709.45,
-          "shadow": true
-        }
-      ],
+      "open_positions": [],
       "closed_history": [
         {
           "id": "C9-2026-10-14",
@@ -135,14 +119,26 @@
           "net_pnl_mid": 80.0,
           "fill_vs_mid": -1.2,
           "shadow": true
+        },
+        {
+          "id": "C9-2026-10-28",
+          "sleeve": "SPY",
+          "entry_date": "2026-10-28",
+          "exit_date": "2026-10-29",
+          "exit_reason": "expiry",
+          "net_pnl_base": 90.55,
+          "net_pnl_natural": 88.8,
+          "net_pnl_mid": 92.5,
+          "fill_vs_mid": -1.95,
+          "shadow": true
         }
       ],
-      "cumulative_pnl_base": 206.2,
-      "cumulative_pnl_natural": 197.2,
-      "running_peak": 206.2,
+      "cumulative_pnl_base": 296.75,
+      "cumulative_pnl_natural": 286.0,
+      "running_peak": 296.75,
       "drawdown": 0.0,
       "max_drawdown": 221.2,
-      "trades_since_reset": 9,
+      "trades_since_reset": 10,
       "shadow": true
     },
     "C6": {
