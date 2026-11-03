@@ -206,8 +206,8 @@
      },
      "width": 8.0,
      "last_mark": {
-      "date": "2026-11-02",
-      "cost_to_close": 375.0
+      "date": "2026-11-03",
+      "cost_to_close": 405.0
      }
     },
     {
@@ -272,8 +272,8 @@
      },
      "width": 7.0,
      "last_mark": {
-      "date": "2026-11-02",
-      "cost_to_close": 145.0
+      "date": "2026-11-03",
+      "cost_to_close": 167.50000000000006
      }
     },
     {
@@ -338,8 +338,8 @@
      },
      "width": 2.0,
      "last_mark": {
-      "date": "2026-11-02",
-      "cost_to_close": 22.0
+      "date": "2026-11-03",
+      "cost_to_close": 30.5
      }
     },
     {
@@ -402,7 +402,11 @@
       "k_short": 345.0,
       "k_long": 340.0
      },
-     "width": 7.0
+     "width": 7.0,
+     "last_mark": {
+      "date": "2026-11-03",
+      "cost_to_close": 102.00000000000006
+     }
     },
     {
      "id": "C6-TLT-2026-11-02",
@@ -464,7 +468,11 @@
       "k_short": 80.0,
       "k_long": 78.0
      },
-     "width": 2.0
+     "width": 2.0,
+     "last_mark": {
+      "date": "2026-11-03",
+      "cost_to_close": 41.49999999999999
+     }
     }
    ],
    "exit_alerts": {
@@ -568,7 +576,7 @@
       "entry_date": "2026-11-02",
       "pair_id": "C6-GLD-2026-11-02",
       "prov_iv": 25.45,
-      "status": "pending"
+      "status": "open"
      },
      {
       "id": "C6M-TLT-2026-11-02",
@@ -576,7 +584,7 @@
       "entry_date": "2026-11-02",
       "pair_id": "C6-TLT-2026-11-02",
       "prov_iv": 15.27,
-      "status": "pending"
+      "status": "open"
      }
     ],
     "closed_n": 1,
@@ -670,9 +678,13 @@
      "model_id": "C6M-GLD-2026-11-02",
      "real_credit_base": 80.5,
      "model_credit_base_prov": 145.45036486242196,
-     "model_credit_base": null,
+     "model_credit_base": 144.8107119368007,
      "real_exit_mark": null,
-     "model_exit_mark": null
+     "model_exit_mark": null,
+     "model_credit_mid": 157.62105857674982,
+     "model_Ks": 346.0,
+     "model_Kl": 339.0,
+     "model_expiry": "2026-12-02"
     },
     {
      "pair_id": "C6-TLT-2026-11-02",
@@ -682,9 +694,13 @@
      "model_id": "C6M-TLT-2026-11-02",
      "real_credit_base": 30.5,
      "model_credit_base_prov": 38.14132582095564,
-     "model_credit_base": null,
+     "model_credit_base": 38.14132582095564,
      "real_exit_mark": null,
-     "model_exit_mark": null
+     "model_exit_mark": null,
+     "model_credit_mid": 41.14132582095564,
+     "model_Ks": 80.0,
+     "model_Kl": 78.0,
+     "model_expiry": "2026-12-02"
     }
    ]
   },
@@ -709,79 +725,23 @@
    "started": "2026-11-02",
    "premium_paid_since_reset": 0.0,
    "premium_reset_date": null,
-   "gate_log": [],
-   "candidate": {
-    "entry_date": "2026-11-02",
-    "month": "2026-11",
-    "created": "2026-11-02T16:20:14-05:00",
-    "wait_runs": 0,
-    "skip": null,
-    "position": {
-     "id": "C3-2026-11-02",
-     "strategy": "C3",
-     "sleeve": "SPY",
-     "version": "real",
-     "entry_date": "2026-11-02",
-     "quote_time": "2026-11-02T16:00:00-05:00",
-     "quote_file_ts_utc": "2026-11-02T21:19:31+00:00",
-     "opened_at": "2026-11-02T16:20:14-05:00",
-     "expiry": "2026-12-31",
-     "dte_in": 59,
-     "spot_in": 752.1,
-     "legs": [
-      {
-       "label": "BUY 1 714P 2026-12-31",
-       "cp": -1,
-       "strike": 714.0,
-       "expiry": "2026-12-31",
-       "qty": 1,
-       "bid": 9.07,
-       "ask": 9.14,
-       "mid": 9.105,
-       "iv": 0.2076,
-       "delta": -0.2395,
-       "delta_src": "feed"
-      },
-      {
-       "label": "SELL 1 639P 2026-12-31",
-       "cp": -1,
-       "strike": 639.0,
-       "expiry": "2026-12-31",
-       "qty": -1,
-       "bid": 3.01,
-       "ask": 3.05,
-       "mid": 3.03,
-       "iv": 0.2978,
-       "delta": -0.0736,
-       "delta_src": "feed"
-      }
-     ],
-     "entry_cf": {
-      "mid": -607.5,
-      "base": -610.25,
-      "nat": -613.0,
-      "x3": -615.75
-     },
-     "entry_units": 2,
-     "max_loss": 610.35,
-     "med_rel_spread": 0.010444701801316892,
-     "flags": {
-      "stale": false
-     },
-     "exit_attempts": 0,
-     "net_debit_base": 610.25,
-     "strikes": {
-      "k_long": 714.0,
-      "k_short": 639.0
-     }
-    },
-    "prov": {
-     "vix": 21.4,
-     "vix3m": 21.71,
+   "gate_log": [
+    {
+     "date": "2026-11-02",
+     "month": "2026-11",
+     "vix": 21.15,
+     "vix3m": 21.6,
+     "ratio": 0.9791666666666665,
      "q25": 15.8025,
-     "passes": false
+     "passes": false,
+     "prov_vix": 21.4,
+     "prov_vix3m": 21.71,
+     "prov_passes": false,
+     "flipped": false,
+     "confirmed_on": "2026-11-03"
     }
-   },
+   ],
+   "candidate": null,
    "spy_peak": 779.09,
    "spy_peak_date": "2026-10-13",
    "episode": null,
@@ -790,8 +750,8 @@
  },
  "last_run": {
   "trigger": "cf-scheduler",
-  "at_et": "2026-11-02T16:20:14-05:00",
-  "session": "2026-11-02",
+  "at_et": "2026-11-03T16:20:16-05:00",
+  "session": "2026-11-03",
   "phase": "close",
   "guard": "on_time",
   "late_min": 0.2,
@@ -835,7 +795,8 @@
   "entry:C9-2026-10-28": "2026-10-28T16:20:58-04:00",
   "exit:C9-2026-10-28:expiry": "2026-10-29T16:20:59-04:00",
   "entry:C6-GLD-2026-11-02": "2026-11-02T16:20:14-05:00",
-  "entry:C6-TLT-2026-11-02": "2026-11-02T16:20:14-05:00"
+  "entry:C6-TLT-2026-11-02": "2026-11-02T16:20:14-05:00",
+  "c3gate:2026-11": "2026-11-03T16:20:16-05:00"
  },
  "skips": {
   "2026-W42": {
@@ -851,7 +812,7 @@
   },
   "2026-W45": {
    "C9": {
-    "gate_closed": 1
+    "gate_closed": 2
    }
   }
  },
@@ -859,7 +820,7 @@
   "C9": {
    "run_late": 1,
    "missed_run": 2,
-   "gate_closed": 2
+   "gate_closed": 3
   },
   "C6": {},
   "C3": {}
@@ -869,18 +830,19 @@
   "2026-10-27|C9|missed_run": true,
   "2026-10-29|C9|gate_closed": true,
   "2026-10-30|C9|missed_run": true,
-  "2026-11-02|C9|gate_closed": true
+  "2026-11-02|C9|gate_closed": true,
+  "2026-11-03|C9|gate_closed": true
  },
  "runs": {
   "2026-W42": 4,
   "2026-W43": 5,
   "2026-W44": 3,
-  "2026-W45": 1
+  "2026-W45": 2
  },
  "last_session": {
-  "C9": "2026-11-02",
-  "C6": "2026-11-02",
-  "C3": "2026-11-02"
+  "C9": "2026-11-03",
+  "C6": "2026-11-03",
+  "C3": "2026-11-03"
  },
  "notes": {
   "prov_vs_pub": [
@@ -1171,6 +1133,30 @@
     "date": "2026-10-29",
     "prov": 19.3,
     "pub": 19.37
+   },
+   {
+    "name": "GVZ",
+    "date": "2026-11-02",
+    "prov": 25.45,
+    "pub": 25.45
+   },
+   {
+    "name": "VXTLT",
+    "date": "2026-11-02",
+    "prov": 15.27,
+    "pub": 15.27
+   },
+   {
+    "name": "VIX",
+    "date": "2026-11-02",
+    "prov": 21.4,
+    "pub": 21.15
+   },
+   {
+    "name": "VIX3M",
+    "date": "2026-11-02",
+    "prov": 21.71,
+    "pub": 21.6
    }
   ]
  }
