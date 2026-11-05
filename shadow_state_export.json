@@ -3,7 +3,7 @@
   "shadow": true,
   "banner": "SHADOW - NOT A TRADE",
   "note": "Shadow-only export. Positions hold no money. Not for the live combined-drawdown monitor.",
-  "generated_at": "2026-11-04T21:22:53+00:00",
+  "generated_at": "2026-11-05T21:22:55+00:00",
   "strategies": {
     "C9": {
       "strategy_id": "C9",

@@ -210,8 +210,8 @@
      },
      "width": 8.0,
      "last_mark": {
-      "date": "2026-11-04",
-      "cost_to_close": 191.0
+      "date": "2026-11-05",
+      "cost_to_close": 166.50000000000003
      }
     },
     {
@@ -276,8 +276,8 @@
      },
      "width": 7.0,
      "last_mark": {
-      "date": "2026-11-04",
-      "cost_to_close": 65.5
+      "date": "2026-11-05",
+      "cost_to_close": 60.5
      }
     },
     {
@@ -342,8 +342,8 @@
      },
      "width": 2.0,
      "last_mark": {
-      "date": "2026-11-04",
-      "cost_to_close": 20.000000000000004
+      "date": "2026-11-05",
+      "cost_to_close": 19.500000000000004
      }
     }
    ],
@@ -445,14 +445,6 @@
       "status": "open"
      },
      {
-      "id": "C6M-GLD-2026-11-02",
-      "tk": "GLD",
-      "entry_date": "2026-11-02",
-      "pair_id": "C6-GLD-2026-11-02",
-      "prov_iv": 25.45,
-      "status": "open"
-     },
-     {
       "id": "C6M-TLT-2026-11-02",
       "tk": "TLT",
       "entry_date": "2026-11-02",
@@ -461,16 +453,17 @@
       "status": "open"
      }
     ],
-    "closed_n": 1,
-    "cum_pnl_base": 14.204817,
-    "cum_pnl_nat": 8.36086,
+    "closed_n": 2,
+    "cum_pnl_base": 82.515448,
+    "cum_pnl_nat": 59.365701,
     "recent_pnl_base": [
-     14.204817
+     14.204817,
+     68.310631
     ],
     "sleeves": {
      "GLD": {
-      "closed_n": 0,
-      "cum_pnl_base": 0.0
+      "closed_n": 1,
+      "cum_pnl_base": 68.310631
      },
      "TLT": {
       "closed_n": 1,
@@ -538,7 +531,7 @@
      "model_credit_base_prov": 37.83535855230558,
      "model_credit_base": 37.83535855230558,
      "real_exit_mark": 13.5,
-     "model_exit_mark": null,
+     "model_exit_mark": 27.616854702566496,
      "model_credit_mid": 40.83535855230558,
      "model_Ks": 80.0,
      "model_Kl": 78.0,
@@ -555,7 +548,7 @@
      "model_credit_base_prov": 145.45036486242196,
      "model_credit_base": 144.8107119368007,
      "real_exit_mark": 38.00000000000003,
-     "model_exit_mark": null,
+     "model_exit_mark": 71.80463723833874,
      "model_credit_mid": 157.62105857674982,
      "model_Ks": 346.0,
      "model_Kl": 339.0,
@@ -626,8 +619,8 @@
  },
  "last_run": {
   "trigger": "cf-scheduler",
-  "at_et": "2026-11-04T16:20:13-05:00",
-  "session": "2026-11-04",
+  "at_et": "2026-11-05T16:20:15-05:00",
+  "session": "2026-11-05",
   "phase": "close",
   "guard": "on_time",
   "late_min": 0.2,
@@ -674,7 +667,8 @@
   "entry:C6-TLT-2026-11-02": "2026-11-02T16:20:14-05:00",
   "c3gate:2026-11": "2026-11-03T16:20:16-05:00",
   "exit:C6-TLT-2026-10-26:profit": "2026-11-04T16:20:13-05:00",
-  "exit:C6-GLD-2026-11-02:profit": "2026-11-04T16:20:13-05:00"
+  "exit:C6-GLD-2026-11-02:profit": "2026-11-04T16:20:13-05:00",
+  "exit:C6M-GLD-2026-11-02:profit": "2026-11-05T16:20:15-05:00"
  },
  "skips": {
   "2026-W42": {
@@ -690,7 +684,7 @@
   },
   "2026-W45": {
    "C9": {
-    "gate_closed": 3
+    "gate_closed": 4
    }
   }
  },
@@ -698,7 +692,7 @@
   "C9": {
    "run_late": 1,
    "missed_run": 2,
-   "gate_closed": 4
+   "gate_closed": 5
   },
   "C6": {},
   "C3": {}
@@ -710,18 +704,19 @@
   "2026-10-30|C9|missed_run": true,
   "2026-11-02|C9|gate_closed": true,
   "2026-11-03|C9|gate_closed": true,
-  "2026-11-04|C9|gate_closed": true
+  "2026-11-04|C9|gate_closed": true,
+  "2026-11-05|C9|gate_closed": true
  },
  "runs": {
   "2026-W42": 4,
   "2026-W43": 5,
   "2026-W44": 3,
-  "2026-W45": 3
+  "2026-W45": 4
  },
  "last_session": {
-  "C9": "2026-11-04",
-  "C6": "2026-11-04",
-  "C3": "2026-11-04"
+  "C9": "2026-11-05",
+  "C6": "2026-11-05",
+  "C3": "2026-11-05"
  },
  "notes": {
   "prov_vs_pub": [
@@ -1060,6 +1055,30 @@
     "date": "2026-11-03",
     "prov": 21.31,
     "pub": 21.27
+   },
+   {
+    "name": "GVZ",
+    "date": "2026-11-04",
+    "prov": 24.11,
+    "pub": 24.11
+   },
+   {
+    "name": "VXTLT",
+    "date": "2026-11-04",
+    "prov": 13.52,
+    "pub": 13.52
+   },
+   {
+    "name": "VIX",
+    "date": "2026-11-04",
+    "prov": 16.75,
+    "pub": 16.61
+   },
+   {
+    "name": "VIX3M",
+    "date": "2026-11-04",
+    "prov": 18.86,
+    "pub": 18.8
    }
   ]
  }
