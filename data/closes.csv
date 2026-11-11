@@ -1,16 +1,4 @@
 date,symbol,close,src
-2025-09-02,GLD,325.59,nasdaq
-2025-09-02,SPY,640.27,nasdaq
-2025-09-02,TLT,85.63,nasdaq
-2025-09-03,GLD,328.14,nasdaq
-2025-09-03,SPY,643.74,nasdaq
-2025-09-03,TLT,86.57,nasdaq
-2025-09-04,GLD,326.69,nasdaq
-2025-09-04,SPY,649.12,nasdaq
-2025-09-04,TLT,87.23,nasdaq
-2025-09-05,GLD,331.05,nasdaq
-2025-09-05,SPY,647.24,nasdaq
-2025-09-05,TLT,88.56,nasdaq
 2025-09-08,GLD,334.82,nasdaq
 2025-09-08,SPY,648.83,nasdaq
 2025-09-08,TLT,89.74,nasdaq
@@ -896,3 +884,6 @@ date,symbol,close,src
 2026-11-06,GLD,372.58,cboe
 2026-11-06,SPY,735.36,cboe
 2026-11-06,TLT,81.92,cboe
+2026-11-11,GLD,365.17,cboe
+2026-11-11,SPY,759.81,cboe
+2026-11-11,TLT,80.92,cboe

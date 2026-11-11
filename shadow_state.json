@@ -210,8 +210,8 @@
      },
      "width": 8.0,
      "last_mark": {
-      "date": "2026-11-06",
-      "cost_to_close": 193.50000000000006
+      "date": "2026-11-11",
+      "cost_to_close": 297.5
      }
     },
     {
@@ -276,8 +276,8 @@
      },
      "width": 7.0,
      "last_mark": {
-      "date": "2026-11-06",
-      "cost_to_close": 66.00000000000003
+      "date": "2026-11-11",
+      "cost_to_close": 98.5
      }
     },
     {
@@ -342,8 +342,8 @@
      },
      "width": 2.0,
      "last_mark": {
-      "date": "2026-11-06",
-      "cost_to_close": 17.5
+      "date": "2026-11-11",
+      "cost_to_close": 26.0
      }
     }
    ],
@@ -364,7 +364,9 @@
     "C6M-GLD-2026-11-02",
     "C6-GLD-2026-11-02",
     "C6M-TLT-2026-11-02",
-    "C6-TLT-2026-11-02"
+    "C6-TLT-2026-11-02",
+    "C6M-GLD-2026-11-09",
+    "C6M-TLT-2026-11-09"
    ],
    "quality": [
     {
@@ -451,6 +453,22 @@
       "pair_id": "C6-TLT-2026-11-02",
       "prov_iv": 15.27,
       "status": "open"
+     },
+     {
+      "id": "C6M-GLD-2026-11-09",
+      "tk": "GLD",
+      "entry_date": "2026-11-09",
+      "pair_id": null,
+      "prov_iv": null,
+      "status": "pending"
+     },
+     {
+      "id": "C6M-TLT-2026-11-09",
+      "tk": "TLT",
+      "entry_date": "2026-11-09",
+      "pair_id": null,
+      "prov_iv": null,
+      "status": "pending"
      }
     ],
     "closed_n": 2,
@@ -619,12 +637,12 @@
  },
  "last_run": {
   "trigger": "cf-scheduler",
-  "at_et": "2026-11-06T16:20:13-05:00",
-  "session": "2026-11-06",
+  "at_et": "2026-11-11T16:20:25-05:00",
+  "session": "2026-11-11",
   "phase": "close",
   "guard": "on_time",
-  "late_min": 0.2,
-  "data_ok": true,
+  "late_min": 0.4,
+  "data_ok": false,
   "strategies": [
    "C3",
    "C6",
@@ -669,7 +687,8 @@
   "exit:C6-TLT-2026-10-26:profit": "2026-11-04T16:20:13-05:00",
   "exit:C6-GLD-2026-11-02:profit": "2026-11-04T16:20:13-05:00",
   "exit:C6M-GLD-2026-11-02:profit": "2026-11-05T16:20:15-05:00",
-  "weekly:2026-W45": "2026-11-06T16:20:13-05:00"
+  "weekly:2026-W45": "2026-11-06T16:20:13-05:00",
+  "notice:data:2026-11-11": "2026-11-11T16:20:25-05:00"
  },
  "skips": {
   "2026-W42": {
@@ -687,15 +706,29 @@
    "C9": {
     "gate_closed": 5
    }
+  },
+  "2026-W46": {
+   "C9": {
+    "missed_run": 2,
+    "no_gate_data": 1
+   },
+   "C6": {
+    "GLD:missed_run": 1,
+    "TLT:missed_run": 1
+   }
   }
  },
  "total_skips": {
   "C9": {
    "run_late": 1,
-   "missed_run": 2,
-   "gate_closed": 6
+   "missed_run": 4,
+   "gate_closed": 6,
+   "no_gate_data": 1
   },
-  "C6": {},
+  "C6": {
+   "GLD:missed_run": 1,
+   "TLT:missed_run": 1
+  },
   "C3": {}
  },
  "skip_keys": {
@@ -707,18 +740,24 @@
   "2026-11-03|C9|gate_closed": true,
   "2026-11-04|C9|gate_closed": true,
   "2026-11-05|C9|gate_closed": true,
-  "2026-11-06|C9|gate_closed": true
+  "2026-11-06|C9|gate_closed": true,
+  "2026-11-09|C9|missed_run": true,
+  "2026-11-10|C9|missed_run": true,
+  "2026-11-09|C6|GLD:missed_run": true,
+  "2026-11-09|C6|TLT:missed_run": true,
+  "2026-11-11|C9|no_gate_data": true
  },
  "runs": {
   "2026-W42": 4,
   "2026-W43": 5,
   "2026-W44": 3,
-  "2026-W45": 5
+  "2026-W45": 5,
+  "2026-W46": 1
  },
  "last_session": {
-  "C9": "2026-11-06",
-  "C6": "2026-11-06",
-  "C3": "2026-11-06"
+  "C9": "2026-11-11",
+  "C6": "2026-11-11",
+  "C3": "2026-11-11"
  },
  "notes": {
   "prov_vs_pub": [
@@ -1105,6 +1144,30 @@
     "date": "2026-11-05",
     "prov": 25.29,
     "pub": 25.55
+   },
+   {
+    "name": "GVZ",
+    "date": "2026-11-06",
+    "prov": 25.97,
+    "pub": 25.97
+   },
+   {
+    "name": "VXTLT",
+    "date": "2026-11-06",
+    "prov": 13.76,
+    "pub": 13.76
+   },
+   {
+    "name": "VIX",
+    "date": "2026-11-06",
+    "prov": 25.56,
+    "pub": 25.64
+   },
+   {
+    "name": "VIX3M",
+    "date": "2026-11-06",
+    "prov": 24.59,
+    "pub": 24.6
    }
   ]
  }
