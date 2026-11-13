@@ -7,14 +7,15 @@ name: Shadow bots - daily job
 # Triggers
 #   * Cloudflare open-scheduler Worker: workflow_dispatch with trigger=cf-scheduler and scheduled_for_et (the precise one;
 #     see docs/OPEN_SCHEDULER.md for the job entry).
-#   * Native cron below: a DST-safe backup. 20:20 UTC is 16:20 ET in summer, 21:20 UTC is 16:20 ET in winter. GitHub's native
-#     schedule ran hours late on this account (project doc bot-schedule-incident-2026-09-25), so run_guard.py silences the
-#     wrong-season copy and any run that duplicates one that already happened.
+#   * Native cron below: ONE backup line (one trigger per job, 2026-11-13). 21:20 UTC is 16:20 ET in winter and 17:20 ET in
+#     summer; this is an after-the-close job, so an hour late is fine. GitHub's native schedule runs hours late on this
+#     account (project doc bot-schedule-incident-2026-09-25); run_guard.py silences a run that duplicates one that already
+#     happened. The second line (20:20 UTC) was a wrong-season no-op in winter and was removed.
 #   * Manual: "Run workflow". Tick dry_run to fetch live data and print what would be posted, with nothing written, posted
 #     or committed. Run it after 16:05 ET on a trading day for a meaningful result (earlier is "intraday": diagnostics only).
 on:
   schedule:
-    - cron: "20 20,21 * * 1-5"
+    - cron: "20 21 * * 1-5"
   workflow_dispatch:
     inputs:
       scheduled_for_et:

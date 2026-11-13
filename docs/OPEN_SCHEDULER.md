@@ -12,7 +12,7 @@ on the control bot, 272 to 296 minutes late on two others). The existing bots th
 | Trigger | When | What `run_guard.py` does with it |
 |---|---|---|
 | Worker, `trigger=cf-scheduler`, `scheduled_for_et=<16:20 ET>` | 16:20 ET, any season | Runs it. Writes the day's marker `.run_guard_shadow.json` after a clean exit. |
-| Native cron `20 20,21 * * 1-5` (UTC, GitHub numbers Sunday 0) | 20:20 and 21:20 UTC, every weekday | In summer 20:20 UTC is 16:20 ET (on time) and 21:20 UTC is 17:20 ET. In winter 20:20 UTC is 15:20 ET (more than a minute before the target: `too_early`, skipped silently) and 21:20 UTC is 16:20 ET. When the Worker run already happened the later copy is a silent duplicate. If the Worker run did not happen, a late native copy runs flagged: it settles and exits but opens nothing new (`run_late`) once it is past 16:30 ET. |
+| Native cron `20 21 * * 1-5` (UTC, GitHub numbers Sunday 0; one line since 2026-11-13) | 21:20 UTC, every weekday | 16:20 ET in winter, 17:20 ET in summer. When the Worker run already happened it is a silent duplicate. If the Worker run did not happen, a late native run runs flagged: it settles and exits but opens nothing new (`run_late`) once it is past 16:30 ET. The earlier 20:20 UTC line was removed: in winter it was 15:20 ET, `too_early`, skipped every day. |
 | "Run workflow" button | any time | A manual run: ignores and never writes the marker. Tick `dry_run` to print what would be posted and write nothing. |
 
 ## 1. The job entry
