@@ -34,7 +34,7 @@ def code_lines(text):
 class ShadowWorkflow(unittest.TestCase):
     def test_cron_covers_both_seasons_of_the_16_20_et_run(self):
         crons = re.findall(r'cron:\s*"([^"]+)"', SHADOW)
-        self.assertEqual(crons, ["20 20,21 * * 1-5"], "20:20 UTC is 16:20 EDT, 21:20 UTC is 16:20 EST; weekdays only")
+        self.assertEqual(crons, ["20 21 * * 1-5"], "one backup line: 21:20 UTC is 16:20 EST / 17:20 EDT; weekdays only")
         self.assertEqual(cfg.TARGET_ET, "16:20")
 
     def test_dispatch_inputs(self):

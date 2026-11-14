@@ -45,7 +45,7 @@ repository, so it was not done here.
 4. **Dry run** (Actions, "Shadow bots - daily job", Run workflow, `dry_run` ticked). It fetches live data and prints what it would
    post; nothing is posted, written or committed. Run it after 16:05 ET on a trading day for a meaningful result (earlier runs are
    labelled `intraday` and only record diagnostics).
-5. **Schedule it.** The workflow carries a native cron (`20 20,21 * * 1-5` UTC, covering both DST seasons), but native schedules ran hours
+5. **Schedule it.** The workflow carries one backup cron line (`20 21 * * 1-5` UTC: 16:20 ET in winter, 17:20 ET in summer), but native schedules ran hours
    late on this account (see `bot-schedule-incident-2026-09-25`). Add the job to the Cloudflare **open-scheduler** Worker and widen its
    Cron Trigger by one hour before **November 2**: step by step in [`docs/OPEN_SCHEDULER.md`](docs/OPEN_SCHEDULER.md). The Worker's own code could not be read
    from here (the field names come from two project notes: `at_et: "16:20"`; Cloudflare numbers weekdays 2-6, so the Cron Trigger is `* 11-21 * * 2-6`); mirror an existing entry.
