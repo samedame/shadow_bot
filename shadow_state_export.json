@@ -3,7 +3,7 @@
   "shadow": true,
   "banner": "SHADOW - NOT A TRADE",
   "note": "Shadow-only export. Positions hold no money. Not for the live combined-drawdown monitor.",
-  "generated_at": "2026-11-11T21:23:15+00:00",
+  "generated_at": "2026-11-16T21:23:02+00:00",
   "strategies": {
     "C9": {
       "strategy_id": "C9",
@@ -148,19 +148,6 @@
       "primed": false,
       "open_positions": [
         {
-          "id": "C6-GLD-2026-10-19",
-          "sleeve": "GLD",
-          "version": "real",
-          "entry_date": "2026-10-19",
-          "expiry": "2026-11-20",
-          "legs": [
-            "SELL 1 366P 2026-11-20",
-            "BUY 1 358P 2026-11-20"
-          ],
-          "max_loss": 655.85,
-          "shadow": true
-        },
-        {
           "id": "C6-GLD-2026-10-26",
           "sleeve": "GLD",
           "version": "real",
@@ -184,6 +171,32 @@
             "BUY 1 78P 2026-11-30"
           ],
           "max_loss": 169.6,
+          "shadow": true
+        },
+        {
+          "id": "C6-GLD-2026-11-16",
+          "sleeve": "GLD",
+          "version": "real",
+          "entry_date": "2026-11-16",
+          "expiry": "2026-12-18",
+          "legs": [
+            "SELL 1 335P 2026-12-18",
+            "BUY 1 330P 2026-12-18"
+          ],
+          "max_loss": 419.6,
+          "shadow": true
+        },
+        {
+          "id": "C6-TLT-2026-11-16",
+          "sleeve": "TLT",
+          "version": "real",
+          "entry_date": "2026-11-16",
+          "expiry": "2026-12-18",
+          "legs": [
+            "SELL 1 77P 2026-12-18",
+            "BUY 1 75P 2026-12-18"
+          ],
+          "max_loss": 171.35,
           "shadow": true
         }
       ],
@@ -223,14 +236,26 @@
           "net_pnl_mid": 51.0,
           "fill_vs_mid": -14.2,
           "shadow": true
+        },
+        {
+          "id": "C6-GLD-2026-10-19",
+          "sleeve": "GLD",
+          "entry_date": "2026-10-19",
+          "exit_date": "2026-11-16",
+          "exit_reason": "dte",
+          "net_pnl_base": -514.7,
+          "net_pnl_natural": -541.2,
+          "net_pnl_mid": -488.0,
+          "fill_vs_mid": -26.7,
+          "shadow": true
         }
       ],
-      "cumulative_pnl_base": 67.65,
-      "cumulative_pnl_natural": 50.4,
+      "cumulative_pnl_base": -447.05,
+      "cumulative_pnl_natural": -490.8,
       "running_peak": 67.65,
-      "drawdown": 0.0,
-      "max_drawdown": 0.0,
-      "trades_since_reset": 3,
+      "drawdown": 514.7,
+      "max_drawdown": 514.7,
+      "trades_since_reset": 4,
       "shadow": true
     },
     "C3": {
