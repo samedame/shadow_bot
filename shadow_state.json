@@ -212,8 +212,8 @@
      },
      "width": 7.0,
      "last_mark": {
-      "date": "2026-11-16",
-      "cost_to_close": 229.99999999999983
+      "date": "2026-11-17",
+      "cost_to_close": 235.0
      }
     },
     {
@@ -278,8 +278,8 @@
      },
      "width": 2.0,
      "last_mark": {
-      "date": "2026-11-16",
-      "cost_to_close": 78.0
+      "date": "2026-11-17",
+      "cost_to_close": 69.0
      }
     },
     {
@@ -342,7 +342,11 @@
       "k_short": 335.0,
       "k_long": 330.0
      },
-     "width": 7.0
+     "width": 7.0,
+     "last_mark": {
+      "date": "2026-11-17",
+      "cost_to_close": 90.5
+     }
     },
     {
      "id": "C6-TLT-2026-11-16",
@@ -404,7 +408,11 @@
       "k_short": 77.0,
       "k_long": 75.0
      },
-     "width": 2.0
+     "width": 2.0,
+     "last_mark": {
+      "date": "2026-11-17",
+      "cost_to_close": 25.0
+     }
     }
    ],
    "exit_alerts": {
@@ -529,7 +537,7 @@
       "entry_date": "2026-11-16",
       "pair_id": "C6-GLD-2026-11-16",
       "prov_iv": 26.42,
-      "status": "pending"
+      "status": "open"
      },
      {
       "id": "C6M-TLT-2026-11-16",
@@ -537,7 +545,7 @@
       "entry_date": "2026-11-16",
       "pair_id": "C6-TLT-2026-11-16",
       "prov_iv": 14.25,
-      "status": "pending"
+      "status": "open"
      }
     ],
     "closed_n": 5,
@@ -572,7 +580,7 @@
      "model_credit_base_prov": 165.39612981148642,
      "model_credit_base": 165.1280798164276,
      "real_exit_mark": 637.5,
-     "model_exit_mark": null,
+     "model_exit_mark": 712.3331333958674,
      "model_credit_mid": 176.8460663544161,
      "model_Ks": 366.0,
      "model_Kl": 358.0,
@@ -670,9 +678,13 @@
      "model_id": "C6M-GLD-2026-11-16",
      "real_credit_base": 80.5,
      "model_credit_base_prov": 144.82010206757377,
-     "model_credit_base": null,
+     "model_credit_base": 144.61010175402066,
      "real_exit_mark": null,
-     "model_exit_mark": null
+     "model_exit_mark": null,
+     "model_credit_mid": 157.5281024827845,
+     "model_Ks": 337.0,
+     "model_Kl": 330.0,
+     "model_expiry": "2026-12-16"
     },
     {
      "pair_id": "C6-TLT-2026-11-16",
@@ -682,9 +694,13 @@
      "model_id": "C6M-TLT-2026-11-16",
      "real_credit_base": 28.75,
      "model_credit_base_prov": 39.47614247376106,
-     "model_credit_base": null,
+     "model_credit_base": 39.47614247376106,
      "real_exit_mark": null,
-     "model_exit_mark": null
+     "model_exit_mark": null,
+     "model_credit_mid": 42.47614247376106,
+     "model_Ks": 78.0,
+     "model_Kl": 76.0,
+     "model_expiry": "2026-12-16"
     }
    ]
   },
@@ -734,11 +750,11 @@
  },
  "last_run": {
   "trigger": "cf-scheduler",
-  "at_et": "2026-11-16T16:20:24-05:00",
-  "session": "2026-11-16",
+  "at_et": "2026-11-17T16:20:29-05:00",
+  "session": "2026-11-17",
   "phase": "close",
   "guard": "on_time",
-  "late_min": 0.4,
+  "late_min": 0.5,
   "data_ok": true,
   "strategies": [
    "C3",
@@ -822,7 +838,7 @@
   },
   "2026-W47": {
    "C9": {
-    "gate_closed": 1
+    "gate_closed": 2
    }
   }
  },
@@ -830,7 +846,7 @@
   "C9": {
    "run_late": 1,
    "missed_run": 6,
-   "gate_closed": 7,
+   "gate_closed": 8,
    "no_gate_data": 1
   },
   "C6": {
@@ -856,7 +872,8 @@
   "2026-11-11|C9|no_gate_data": true,
   "2026-11-12|C9|missed_run": true,
   "2026-11-13|C9|missed_run": true,
-  "2026-11-16|C9|gate_closed": true
+  "2026-11-16|C9|gate_closed": true,
+  "2026-11-17|C9|gate_closed": true
  },
  "runs": {
   "2026-W42": 4,
@@ -864,12 +881,12 @@
   "2026-W44": 3,
   "2026-W45": 5,
   "2026-W46": 1,
-  "2026-W47": 1
+  "2026-W47": 2
  },
  "last_session": {
-  "C9": "2026-11-16",
-  "C6": "2026-11-16",
-  "C3": "2026-11-16"
+  "C9": "2026-11-17",
+  "C6": "2026-11-17",
+  "C3": "2026-11-17"
  },
  "notes": {
   "prov_vs_pub": [
@@ -1304,6 +1321,30 @@
     "date": "2026-11-11",
     "prov": 19.25,
     "pub": 19.24
+   },
+   {
+    "name": "GVZ",
+    "date": "2026-11-16",
+    "prov": 26.42,
+    "pub": 26.42
+   },
+   {
+    "name": "VXTLT",
+    "date": "2026-11-16",
+    "prov": 14.25,
+    "pub": 14.25
+   },
+   {
+    "name": "VIX",
+    "date": "2026-11-16",
+    "prov": 23.06,
+    "pub": 22.91
+   },
+   {
+    "name": "VIX3M",
+    "date": "2026-11-16",
+    "prov": 23.15,
+    "pub": 23.02
    }
   ]
  }
