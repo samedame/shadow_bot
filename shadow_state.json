@@ -129,25 +129,27 @@
   "C6": {
    "status": "active",
    "primed": false,
-   "closed_n": 4,
+   "closed_n": 5,
    "unpriced_n": 0,
-   "cum_pnl_mid": -402.5,
-   "cum_pnl_base": -447.05,
-   "cum_pnl_nat": -490.8,
+   "cum_pnl_mid": -387.0,
+   "cum_pnl_base": -433.0,
+   "cum_pnl_nat": -478.0,
    "peak": 67.65,
-   "drawdown": 514.7,
+   "drawdown": 500.65,
    "max_drawdown": 514.7,
    "recent_pnl_base": [
     17.3,
     13.55,
     36.8,
-    -514.7
+    -514.7,
+    14.05
    ],
    "recent_pnl_nat": [
     15.8,
     11.8,
     22.8,
-    -541.2
+    -541.2,
+    12.8
    ],
    "open_positions": [
     {
@@ -212,8 +214,8 @@
      },
      "width": 7.0,
      "last_mark": {
-      "date": "2026-11-17",
-      "cost_to_close": 235.0
+      "date": "2026-11-18",
+      "cost_to_close": 379.9999999999998
      }
     },
     {
@@ -278,8 +280,8 @@
      },
      "width": 2.0,
      "last_mark": {
-      "date": "2026-11-17",
-      "cost_to_close": 69.0
+      "date": "2026-11-18",
+      "cost_to_close": 33.0
      }
     },
     {
@@ -344,74 +346,8 @@
      },
      "width": 7.0,
      "last_mark": {
-      "date": "2026-11-17",
-      "cost_to_close": 90.5
-     }
-    },
-    {
-     "id": "C6-TLT-2026-11-16",
-     "strategy": "C6",
-     "sleeve": "TLT",
-     "version": "real",
-     "entry_date": "2026-11-16",
-     "quote_time": "2026-11-16T15:59:59-05:00",
-     "quote_file_ts_utc": "2026-11-16T21:19:37+00:00",
-     "opened_at": "2026-11-16T16:20:24-05:00",
-     "expiry": "2026-12-18",
-     "dte_in": 32,
-     "spot_in": 79.38,
-     "legs": [
-      {
-       "label": "SELL 1 77P 2026-12-18",
-       "cp": -1,
-       "strike": 77.0,
-       "expiry": "2026-12-18",
-       "qty": -1,
-       "bid": 0.43,
-       "ask": 0.45,
-       "mid": 0.44,
-       "iv": 0.1287,
-       "delta": -0.2442,
-       "delta_src": "feed"
-      },
-      {
-       "label": "BUY 1 75P 2026-12-18",
-       "cp": -1,
-       "strike": 75.0,
-       "expiry": "2026-12-18",
-       "qty": 1,
-       "bid": 0.14,
-       "ask": 0.15,
-       "mid": 0.145,
-       "iv": 0.1368,
-       "delta": -0.0969,
-       "delta_src": "feed"
-      }
-     ],
-     "entry_cf": {
-      "mid": 29.5,
-      "base": 28.75,
-      "nat": 28.0,
-      "x3": 27.25
-     },
-     "entry_units": 2,
-     "max_loss": 171.35,
-     "med_rel_spread": 0.057210031347962334,
-     "flags": {
-      "stale": false
-     },
-     "exit_attempts": 0,
-     "pair_id": "C6-TLT-2026-11-16",
-     "model_credit_base": 39.47614247376106,
-     "real_over_model": 0.7283,
-     "strikes": {
-      "k_short": 77.0,
-      "k_long": 75.0
-     },
-     "width": 2.0,
-     "last_mark": {
-      "date": "2026-11-17",
-      "cost_to_close": 25.0
+      "date": "2026-11-18",
+      "cost_to_close": 160.0
      }
     }
    ],
@@ -419,7 +355,8 @@
     "C6-TLT-2026-10-19:profit": "2026-10-22T16:21:09-04:00",
     "C6-TLT-2026-10-26:profit": "2026-11-04T16:20:13-05:00",
     "C6-GLD-2026-11-02:profit": "2026-11-04T16:20:13-05:00",
-    "C6-GLD-2026-10-19:dte": "2026-11-16T16:20:24-05:00"
+    "C6-GLD-2026-10-19:dte": "2026-11-16T16:20:24-05:00",
+    "C6-TLT-2026-11-16:profit": "2026-11-18T16:20:24-05:00"
    },
    "entries_done": [
     "C6M-GLD-2026-10-19",
@@ -500,9 +437,9 @@
      "cum_pnl_nat": -518.4
     },
     "TLT": {
-     "closed_n": 2,
-     "cum_pnl_base": 30.85,
-     "cum_pnl_nat": 27.6
+     "closed_n": 3,
+     "cum_pnl_base": 44.9,
+     "cum_pnl_nat": 40.4
     }
    },
    "model": {
@@ -695,12 +632,13 @@
      "real_credit_base": 28.75,
      "model_credit_base_prov": 39.47614247376106,
      "model_credit_base": 39.47614247376106,
-     "real_exit_mark": null,
+     "real_exit_mark": 14.0,
      "model_exit_mark": null,
      "model_credit_mid": 42.47614247376106,
      "model_Ks": 78.0,
      "model_Kl": 76.0,
-     "model_expiry": "2026-12-16"
+     "model_expiry": "2026-12-16",
+     "real_exit_date": "2026-11-18"
     }
    ]
   },
@@ -750,11 +688,11 @@
  },
  "last_run": {
   "trigger": "cf-scheduler",
-  "at_et": "2026-11-17T16:20:29-05:00",
-  "session": "2026-11-17",
+  "at_et": "2026-11-18T16:20:24-05:00",
+  "session": "2026-11-18",
   "phase": "close",
   "guard": "on_time",
-  "late_min": 0.5,
+  "late_min": 0.4,
   "data_ok": true,
   "strategies": [
    "C3",
@@ -807,7 +745,8 @@
   "exit:C6M-GLD-2026-10-26:profit": "2026-11-16T16:20:24-05:00",
   "exit:C6M-TLT-2026-10-26:profit": "2026-11-16T16:20:24-05:00",
   "entry:C6-GLD-2026-11-16": "2026-11-16T16:20:24-05:00",
-  "entry:C6-TLT-2026-11-16": "2026-11-16T16:20:24-05:00"
+  "entry:C6-TLT-2026-11-16": "2026-11-16T16:20:24-05:00",
+  "exit:C6-TLT-2026-11-16:profit": "2026-11-18T16:20:24-05:00"
  },
  "skips": {
   "2026-W42": {
@@ -838,7 +777,7 @@
   },
   "2026-W47": {
    "C9": {
-    "gate_closed": 2
+    "gate_closed": 3
    }
   }
  },
@@ -846,7 +785,7 @@
   "C9": {
    "run_late": 1,
    "missed_run": 6,
-   "gate_closed": 8,
+   "gate_closed": 9,
    "no_gate_data": 1
   },
   "C6": {
@@ -873,7 +812,8 @@
   "2026-11-12|C9|missed_run": true,
   "2026-11-13|C9|missed_run": true,
   "2026-11-16|C9|gate_closed": true,
-  "2026-11-17|C9|gate_closed": true
+  "2026-11-17|C9|gate_closed": true,
+  "2026-11-18|C9|gate_closed": true
  },
  "runs": {
   "2026-W42": 4,
@@ -881,12 +821,12 @@
   "2026-W44": 3,
   "2026-W45": 5,
   "2026-W46": 1,
-  "2026-W47": 2
+  "2026-W47": 3
  },
  "last_session": {
-  "C9": "2026-11-17",
-  "C6": "2026-11-17",
-  "C3": "2026-11-17"
+  "C9": "2026-11-18",
+  "C6": "2026-11-18",
+  "C3": "2026-11-18"
  },
  "notes": {
   "prov_vs_pub": [
@@ -1345,6 +1285,30 @@
     "date": "2026-11-16",
     "prov": 23.15,
     "pub": 23.02
+   },
+   {
+    "name": "GVZ",
+    "date": "2026-11-17",
+    "prov": 26.46,
+    "pub": 26.46
+   },
+   {
+    "name": "VXTLT",
+    "date": "2026-11-17",
+    "prov": 14.23,
+    "pub": 14.23
+   },
+   {
+    "name": "VIX",
+    "date": "2026-11-17",
+    "prov": 25.33,
+    "pub": 25.46
+   },
+   {
+    "name": "VIX3M",
+    "date": "2026-11-17",
+    "prov": 24.91,
+    "pub": 24.98
    }
   ]
  }

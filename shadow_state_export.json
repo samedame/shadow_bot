@@ -3,7 +3,7 @@
   "shadow": true,
   "banner": "SHADOW - NOT A TRADE",
   "note": "Shadow-only export. Positions hold no money. Not for the live combined-drawdown monitor.",
-  "generated_at": "2026-11-17T21:23:11+00:00",
+  "generated_at": "2026-11-18T21:23:04+00:00",
   "strategies": {
     "C9": {
       "strategy_id": "C9",
@@ -185,19 +185,6 @@
           ],
           "max_loss": 419.6,
           "shadow": true
-        },
-        {
-          "id": "C6-TLT-2026-11-16",
-          "sleeve": "TLT",
-          "version": "real",
-          "entry_date": "2026-11-16",
-          "expiry": "2026-12-18",
-          "legs": [
-            "SELL 1 77P 2026-12-18",
-            "BUY 1 75P 2026-12-18"
-          ],
-          "max_loss": 171.35,
-          "shadow": true
         }
       ],
       "closed_history": [
@@ -248,14 +235,26 @@
           "net_pnl_mid": -488.0,
           "fill_vs_mid": -26.7,
           "shadow": true
+        },
+        {
+          "id": "C6-TLT-2026-11-16",
+          "sleeve": "TLT",
+          "entry_date": "2026-11-16",
+          "exit_date": "2026-11-18",
+          "exit_reason": "profit",
+          "net_pnl_base": 14.05,
+          "net_pnl_natural": 12.8,
+          "net_pnl_mid": 15.5,
+          "fill_vs_mid": -1.45,
+          "shadow": true
         }
       ],
-      "cumulative_pnl_base": -447.05,
-      "cumulative_pnl_natural": -490.8,
+      "cumulative_pnl_base": -433.0,
+      "cumulative_pnl_natural": -478.0,
       "running_peak": 67.65,
-      "drawdown": 514.7,
+      "drawdown": 500.65,
       "max_drawdown": 514.7,
-      "trades_since_reset": 4,
+      "trades_since_reset": 5,
       "shadow": true
     },
     "C3": {
