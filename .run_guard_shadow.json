@@ -1,10 +1,4 @@
 {
- "shadow-daily:2026-10-19": {
-  "done_at": "2026-10-19T16:24:44-04:00",
-  "late_min": 1.0,
-  "status": "on_time",
-  "trigger": "cf-scheduler"
- },
  "shadow-daily:2026-10-20": {
   "done_at": "2026-10-20T16:23:44-04:00",
   "late_min": 0.9,
@@ -97,6 +91,12 @@
  },
  "shadow-daily:2026-11-18": {
   "done_at": "2026-11-18T16:23:05-05:00",
+  "late_min": 0.4,
+  "status": "on_time",
+  "trigger": "cf-scheduler"
+ },
+ "shadow-daily:2026-11-19": {
+  "done_at": "2026-11-19T16:23:03-05:00",
   "late_min": 0.4,
   "status": "on_time",
   "trigger": "cf-scheduler"
