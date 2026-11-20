@@ -204,7 +204,7 @@
      "flags": {
       "stale": false
      },
-     "exit_attempts": 0,
+     "exit_attempts": 1,
      "pair_id": "C6-GLD-2026-10-26",
      "model_credit_base": 142.20718156258116,
      "real_over_model": 0.705,
@@ -280,8 +280,8 @@
      },
      "width": 2.0,
      "last_mark": {
-      "date": "2026-11-19",
-      "cost_to_close": 29.499999999999993
+      "date": "2026-11-20",
+      "cost_to_close": null
      }
     },
     {
@@ -346,8 +346,8 @@
      },
      "width": 7.0,
      "last_mark": {
-      "date": "2026-11-19",
-      "cost_to_close": 215.0000000000001
+      "date": "2026-11-20",
+      "cost_to_close": null
      }
     }
    ],
@@ -688,12 +688,12 @@
  },
  "last_run": {
   "trigger": "cf-scheduler",
-  "at_et": "2026-11-19T16:20:24-05:00",
-  "session": "2026-11-19",
+  "at_et": "2026-11-20T16:29:23-05:00",
+  "session": "2026-11-20",
   "phase": "close",
   "guard": "on_time",
-  "late_min": 0.4,
-  "data_ok": true,
+  "late_min": 0.5,
+  "data_ok": false,
   "strategies": [
    "C3",
    "C6",
@@ -746,7 +746,9 @@
   "exit:C6M-TLT-2026-10-26:profit": "2026-11-16T16:20:24-05:00",
   "entry:C6-GLD-2026-11-16": "2026-11-16T16:20:24-05:00",
   "entry:C6-TLT-2026-11-16": "2026-11-16T16:20:24-05:00",
-  "exit:C6-TLT-2026-11-16:profit": "2026-11-18T16:20:24-05:00"
+  "exit:C6-TLT-2026-11-16:profit": "2026-11-18T16:20:24-05:00",
+  "notice:data:2026-11-20": "2026-11-20T16:29:23-05:00",
+  "weekly:2026-W47": "2026-11-20T16:29:23-05:00"
  },
  "skips": {
   "2026-W42": {
@@ -777,7 +779,7 @@
   },
   "2026-W47": {
    "C9": {
-    "gate_closed": 4
+    "gate_closed": 5
    }
   }
  },
@@ -785,7 +787,7 @@
   "C9": {
    "run_late": 1,
    "missed_run": 6,
-   "gate_closed": 10,
+   "gate_closed": 11,
    "no_gate_data": 1
   },
   "C6": {
@@ -814,7 +816,8 @@
   "2026-11-16|C9|gate_closed": true,
   "2026-11-17|C9|gate_closed": true,
   "2026-11-18|C9|gate_closed": true,
-  "2026-11-19|C9|gate_closed": true
+  "2026-11-19|C9|gate_closed": true,
+  "2026-11-20|C9|gate_closed": true
  },
  "runs": {
   "2026-W42": 4,
@@ -822,12 +825,12 @@
   "2026-W44": 3,
   "2026-W45": 5,
   "2026-W46": 1,
-  "2026-W47": 4
+  "2026-W47": 5
  },
  "last_session": {
-  "C9": "2026-11-19",
-  "C6": "2026-11-19",
-  "C3": "2026-11-19"
+  "C9": "2026-11-20",
+  "C6": "2026-11-20",
+  "C3": "2026-11-20"
  },
  "notes": {
   "prov_vs_pub": [
@@ -1334,6 +1337,30 @@
     "date": "2026-11-18",
     "prov": 24.31,
     "pub": 24.29
+   },
+   {
+    "name": "GVZ",
+    "date": "2026-11-19",
+    "prov": 28.7,
+    "pub": 28.7
+   },
+   {
+    "name": "VXTLT",
+    "date": "2026-11-19",
+    "prov": 13.8,
+    "pub": 13.8
+   },
+   {
+    "name": "VIX",
+    "date": "2026-11-19",
+    "prov": 29.03,
+    "pub": 28.44
+   },
+   {
+    "name": "VIX3M",
+    "date": "2026-11-19",
+    "prov": 27.4,
+    "pub": 27.03
    }
   ]
  }
