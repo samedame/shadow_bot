@@ -1,7 +1,4 @@
 date,symbol,close,src
-2025-09-19,GLD,339.18,nasdaq
-2025-09-19,SPY,663.7,nasdaq
-2025-09-19,TLT,89.02,nasdaq
 2025-09-22,GLD,345.05,nasdaq
 2025-09-22,SPY,666.84,nasdaq
 2025-09-22,TLT,88.7,nasdaq
@@ -887,3 +884,6 @@ date,symbol,close,src
 2026-11-20,GLD,322.87,nasdaq
 2026-11-20,SPY,689.81,nasdaq
 2026-11-20,TLT,81.45,nasdaq
+2026-11-23,GLD,333.02,nasdaq
+2026-11-23,SPY,722.29,nasdaq
+2026-11-23,TLT,81.69,nasdaq

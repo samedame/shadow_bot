@@ -204,7 +204,7 @@
      "flags": {
       "stale": false
      },
-     "exit_attempts": 2,
+     "exit_attempts": 3,
      "pair_id": "C6-GLD-2026-10-26",
      "model_credit_base": 142.20718156258116,
      "real_over_model": 0.705,
@@ -270,7 +270,7 @@
      "flags": {
       "stale": false
      },
-     "exit_attempts": 1,
+     "exit_attempts": 2,
      "pair_id": "C6-TLT-2026-11-02",
      "model_credit_base": 38.14132582095564,
      "real_over_model": 0.7997,
@@ -346,7 +346,7 @@
      },
      "width": 7.0,
      "last_mark": {
-      "date": "2026-11-23",
+      "date": "2026-11-24",
       "cost_to_close": null
      }
     }
@@ -447,14 +447,6 @@
    "model": {
     "open": [
      {
-      "id": "C6M-TLT-2026-11-02",
-      "tk": "TLT",
-      "entry_date": "2026-11-02",
-      "pair_id": "C6-TLT-2026-11-02",
-      "prov_iv": 15.27,
-      "status": "open"
-     },
-     {
       "id": "C6M-GLD-2026-11-09",
       "tk": "GLD",
       "entry_date": "2026-11-09",
@@ -484,7 +476,7 @@
       "entry_date": "2026-11-23",
       "pair_id": "C6-GLD-2026-11-23",
       "prov_iv": null,
-      "status": "pending"
+      "status": "open"
      },
      {
       "id": "C6M-TLT-2026-11-23",
@@ -492,19 +484,20 @@
       "entry_date": "2026-11-23",
       "pair_id": "C6-TLT-2026-11-23",
       "prov_iv": null,
-      "status": "pending"
+      "status": "open"
      }
     ],
-    "closed_n": 6,
-    "cum_pnl_base": 54.065322,
-    "cum_pnl_nat": -21.876465,
+    "closed_n": 7,
+    "cum_pnl_base": 78.495062,
+    "cum_pnl_nat": -2.872666,
     "recent_pnl_base": [
      14.204817,
      68.310631,
      -166.251499,
      98.973359,
      16.356768,
-     22.471246
+     22.471246,
+     24.42974
     ],
     "sleeves": {
      "GLD": {
@@ -512,8 +505,8 @@
       "cum_pnl_base": 1.032491
      },
      "TLT": {
-      "closed_n": 3,
-      "cum_pnl_base": 53.032831
+      "closed_n": 4,
+      "cum_pnl_base": 77.462571
      }
     }
    },
@@ -659,9 +652,13 @@
      "model_id": "C6M-GLD-2026-11-23",
      "real_credit_base": null,
      "model_credit_base_prov": null,
-     "model_credit_base": null,
+     "model_credit_base": 152.94847993729533,
      "real_exit_mark": null,
-     "model_exit_mark": null
+     "model_exit_mark": null,
+     "model_credit_mid": 168.39553024235698,
+     "model_Ks": 316.0,
+     "model_Kl": 309.0,
+     "model_expiry": "2026-12-23"
     },
     {
      "pair_id": "C6-TLT-2026-11-23",
@@ -671,9 +668,13 @@
      "model_id": "C6M-TLT-2026-11-23",
      "real_credit_base": null,
      "model_credit_base_prov": null,
-     "model_credit_base": null,
+     "model_credit_base": 32.190207893246225,
      "real_exit_mark": null,
-     "model_exit_mark": null
+     "model_exit_mark": null,
+     "model_credit_mid": 35.190207893246225,
+     "model_Ks": 80.0,
+     "model_Kl": 78.0,
+     "model_expiry": "2026-12-23"
     }
    ]
   },
@@ -723,8 +724,8 @@
  },
  "last_run": {
   "trigger": "cf-scheduler",
-  "at_et": "2026-11-23T16:29:18-05:00",
-  "session": "2026-11-23",
+  "at_et": "2026-11-24T16:29:17-05:00",
+  "session": "2026-11-24",
   "phase": "close",
   "guard": "on_time",
   "late_min": 0.4,
@@ -785,7 +786,9 @@
   "notice:data:2026-11-20": "2026-11-20T16:29:23-05:00",
   "weekly:2026-W47": "2026-11-20T16:29:23-05:00",
   "exit:C6M-TLT-2026-11-16:profit": "2026-11-23T16:29:18-05:00",
-  "notice:data:2026-11-23": "2026-11-23T16:29:18-05:00"
+  "notice:data:2026-11-23": "2026-11-23T16:29:18-05:00",
+  "exit:C6M-TLT-2026-11-02:profit": "2026-11-24T16:29:17-05:00",
+  "notice:data:2026-11-24": "2026-11-24T16:29:17-05:00"
  },
  "skips": {
   "2026-W42": {
@@ -821,7 +824,7 @@
   },
   "2026-W48": {
    "C9": {
-    "gate_closed": 1
+    "gate_closed": 2
    },
    "C6": {
     "GLD:feed_down": 1,
@@ -833,7 +836,7 @@
   "C9": {
    "run_late": 1,
    "missed_run": 6,
-   "gate_closed": 12,
+   "gate_closed": 13,
    "no_gate_data": 1
   },
   "C6": {
@@ -868,7 +871,8 @@
   "2026-11-20|C9|gate_closed": true,
   "2026-11-23|C9|gate_closed": true,
   "2026-11-23|C6|GLD:feed_down": true,
-  "2026-11-23|C6|TLT:feed_down": true
+  "2026-11-23|C6|TLT:feed_down": true,
+  "2026-11-24|C9|gate_closed": true
  },
  "runs": {
   "2026-W42": 4,
@@ -877,12 +881,12 @@
   "2026-W45": 5,
   "2026-W46": 1,
   "2026-W47": 5,
-  "2026-W48": 1
+  "2026-W48": 2
  },
  "last_session": {
-  "C9": "2026-11-23",
-  "C6": "2026-11-23",
-  "C3": "2026-11-23"
+  "C9": "2026-11-24",
+  "C6": "2026-11-24",
+  "C3": "2026-11-24"
  },
  "notes": {
   "prov_vs_pub": [
