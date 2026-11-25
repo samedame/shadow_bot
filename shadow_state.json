@@ -130,7 +130,7 @@
    "status": "active",
    "primed": false,
    "closed_n": 5,
-   "unpriced_n": 0,
+   "unpriced_n": 1,
    "cum_pnl_mid": -387.0,
    "cum_pnl_base": -433.0,
    "cum_pnl_nat": -478.0,
@@ -152,72 +152,6 @@
     12.8
    ],
    "open_positions": [
-    {
-     "id": "C6-GLD-2026-10-26",
-     "strategy": "C6",
-     "sleeve": "GLD",
-     "version": "real",
-     "entry_date": "2026-10-26",
-     "quote_time": "2026-10-26T15:59:59-04:00",
-     "quote_file_ts_utc": "2026-10-26T20:20:29+00:00",
-     "opened_at": "2026-10-26T16:21:01-04:00",
-     "expiry": "2026-11-27",
-     "dte_in": 32,
-     "spot_in": 367.82,
-     "legs": [
-      {
-       "label": "SELL 1 355P 2026-11-27",
-       "cp": -1,
-       "strike": 355.0,
-       "expiry": "2026-11-27",
-       "qty": -1,
-       "bid": 3.8,
-       "ask": 3.95,
-       "mid": 3.875,
-       "iv": 0.2166,
-       "delta": -0.2649,
-       "delta_src": "feed"
-      },
-      {
-       "label": "BUY 1 350P 2026-11-27",
-       "cp": -1,
-       "strike": 350.0,
-       "expiry": "2026-11-27",
-       "qty": 1,
-       "bid": 2.76,
-       "ask": 2.86,
-       "mid": 2.81,
-       "iv": 0.2225,
-       "delta": -0.2036,
-       "delta_src": "feed"
-      }
-     ],
-     "entry_cf": {
-      "mid": 106.5,
-      "base": 100.25,
-      "nat": 94.0,
-      "x3": 87.75
-     },
-     "entry_units": 2,
-     "max_loss": 399.85,
-     "med_rel_spread": 0.0371484330157273,
-     "flags": {
-      "stale": false
-     },
-     "exit_attempts": 3,
-     "pair_id": "C6-GLD-2026-10-26",
-     "model_credit_base": 142.20718156258116,
-     "real_over_model": 0.705,
-     "strikes": {
-      "k_short": 355.0,
-      "k_long": 350.0
-     },
-     "width": 7.0,
-     "last_mark": {
-      "date": "2026-11-19",
-      "cost_to_close": 499.9999999999998
-     }
-    },
     {
      "id": "C6-TLT-2026-11-02",
      "strategy": "C6",
@@ -270,7 +204,7 @@
      "flags": {
       "stale": false
      },
-     "exit_attempts": 2,
+     "exit_attempts": 3,
      "pair_id": "C6-TLT-2026-11-02",
      "model_credit_base": 38.14132582095564,
      "real_over_model": 0.7997,
@@ -346,7 +280,7 @@
      },
      "width": 7.0,
      "last_mark": {
-      "date": "2026-11-24",
+      "date": "2026-11-25",
       "cost_to_close": null
      }
     }
@@ -356,7 +290,8 @@
     "C6-TLT-2026-10-26:profit": "2026-11-04T16:20:13-05:00",
     "C6-GLD-2026-11-02:profit": "2026-11-04T16:20:13-05:00",
     "C6-GLD-2026-10-19:dte": "2026-11-16T16:20:24-05:00",
-    "C6-TLT-2026-11-16:profit": "2026-11-18T16:20:24-05:00"
+    "C6-TLT-2026-11-16:profit": "2026-11-18T16:20:24-05:00",
+    "C6-GLD-2026-10-26:unpriced": "2026-11-25T16:29:14-05:00"
    },
    "entries_done": [
     "C6M-GLD-2026-10-19",
@@ -724,8 +659,8 @@
  },
  "last_run": {
   "trigger": "cf-scheduler",
-  "at_et": "2026-11-24T16:29:17-05:00",
-  "session": "2026-11-24",
+  "at_et": "2026-11-25T16:29:14-05:00",
+  "session": "2026-11-25",
   "phase": "close",
   "guard": "on_time",
   "late_min": 0.4,
@@ -788,7 +723,8 @@
   "exit:C6M-TLT-2026-11-16:profit": "2026-11-23T16:29:18-05:00",
   "notice:data:2026-11-23": "2026-11-23T16:29:18-05:00",
   "exit:C6M-TLT-2026-11-02:profit": "2026-11-24T16:29:17-05:00",
-  "notice:data:2026-11-24": "2026-11-24T16:29:17-05:00"
+  "notice:data:2026-11-24": "2026-11-24T16:29:17-05:00",
+  "notice:data:2026-11-25": "2026-11-25T16:29:14-05:00"
  },
  "skips": {
   "2026-W42": {
@@ -824,7 +760,7 @@
   },
   "2026-W48": {
    "C9": {
-    "gate_closed": 2
+    "gate_closed": 3
    },
    "C6": {
     "GLD:feed_down": 1,
@@ -836,7 +772,7 @@
   "C9": {
    "run_late": 1,
    "missed_run": 6,
-   "gate_closed": 13,
+   "gate_closed": 14,
    "no_gate_data": 1
   },
   "C6": {
@@ -872,7 +808,8 @@
   "2026-11-23|C9|gate_closed": true,
   "2026-11-23|C6|GLD:feed_down": true,
   "2026-11-23|C6|TLT:feed_down": true,
-  "2026-11-24|C9|gate_closed": true
+  "2026-11-24|C9|gate_closed": true,
+  "2026-11-25|C9|gate_closed": true
  },
  "runs": {
   "2026-W42": 4,
@@ -881,12 +818,12 @@
   "2026-W45": 5,
   "2026-W46": 1,
   "2026-W47": 5,
-  "2026-W48": 2
+  "2026-W48": 3
  },
  "last_session": {
-  "C9": "2026-11-24",
-  "C6": "2026-11-24",
-  "C3": "2026-11-24"
+  "C9": "2026-11-25",
+  "C6": "2026-11-25",
+  "C3": "2026-11-25"
  },
  "notes": {
   "prov_vs_pub": [

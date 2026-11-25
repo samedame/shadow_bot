@@ -3,7 +3,7 @@
   "shadow": true,
   "banner": "SHADOW - NOT A TRADE",
   "note": "Shadow-only export. Positions hold no money. Not for the live combined-drawdown monitor.",
-  "generated_at": "2026-11-24T21:32:18+00:00",
+  "generated_at": "2026-11-25T21:32:10+00:00",
   "strategies": {
     "C9": {
       "strategy_id": "C9",
@@ -148,19 +148,6 @@
       "primed": false,
       "open_positions": [
         {
-          "id": "C6-GLD-2026-10-26",
-          "sleeve": "GLD",
-          "version": "real",
-          "entry_date": "2026-10-26",
-          "expiry": "2026-11-27",
-          "legs": [
-            "SELL 1 355P 2026-11-27",
-            "BUY 1 350P 2026-11-27"
-          ],
-          "max_loss": 399.85,
-          "shadow": true
-        },
-        {
           "id": "C6-TLT-2026-11-02",
           "sleeve": "TLT",
           "version": "real",
@@ -246,6 +233,18 @@
           "net_pnl_natural": 12.8,
           "net_pnl_mid": 15.5,
           "fill_vs_mid": -1.45,
+          "shadow": true
+        },
+        {
+          "id": "C6-GLD-2026-10-26",
+          "sleeve": "GLD",
+          "entry_date": "2026-10-26",
+          "exit_date": "2026-11-25",
+          "exit_reason": "unpriced",
+          "net_pnl_base": null,
+          "net_pnl_natural": null,
+          "net_pnl_mid": null,
+          "fill_vs_mid": null,
           "shadow": true
         }
       ],
